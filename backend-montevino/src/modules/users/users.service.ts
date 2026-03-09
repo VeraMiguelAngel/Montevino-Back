@@ -41,7 +41,6 @@ export class UsersService {
 
     if (updateUserDto.name) user.name = updateUserDto.name;
     if (updateUserDto.email) user.email = updateUserDto.email;
-    if (updateUserDto.phone) user.phone = updateUserDto.phone;
 
     return {
       message: 'User updated successfully',

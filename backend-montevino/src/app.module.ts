@@ -6,6 +6,7 @@ import typeorm from './config/typeorm';
 import { ReservationsModule } from './modules/reservations/reservations.module';
 import { PlatosModule } from './modules/platos/platos.module';
 import { CategoriesModule } from './modules/categories/categories.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -22,9 +23,9 @@ import { CategoriesModule } from './modules/categories/categories.module';
     ReservationsModule,
     PlatosModule,
     CategoriesModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
 })
-
 export class AppModule {}

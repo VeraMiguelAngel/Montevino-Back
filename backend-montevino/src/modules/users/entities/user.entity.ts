@@ -15,9 +15,6 @@ export class Users {
   @Column({ type: 'varchar', unique: true, nullable: false })
   email: string;
 
-  @Column({ type: 'bigint' })
-  phone: number;
-
   @Column({ type: 'varchar', length: 50, nullable: false, unique: true })
   name: string;
 
