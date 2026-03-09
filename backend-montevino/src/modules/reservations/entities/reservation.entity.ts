@@ -1,6 +1,7 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { reservationStatus } from '../reservation-status.enum';
 import { Users } from 'src/modules/users/entities/user.entity';
+import { Pedidos } from 'src/modules/pedidos/entities/pedido.entity';
 
 @Entity({
   name: 'RESERVATIONS',
@@ -39,4 +40,7 @@ export class Reservations {
 
   @ManyToOne(() => Users, (user) => user.reservations)
   user: Users;
+
+  @OneToMany(() => Pedidos, (pedido) => pedido.reservation)
+  pedidos: Pedidos[];
 }
