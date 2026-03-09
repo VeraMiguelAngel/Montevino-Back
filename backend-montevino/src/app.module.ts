@@ -6,6 +6,7 @@ import typeorm from './config/typeorm';
 import { ReservationsModule } from './modules/reservations/reservations.module';
 import { PlatosModule } from './modules/platos/platos.module';
 import { CategoriesModule } from './modules/categories/categories.module';
+import { PedidosModule } from './modules/pedidos/pedidos.module';
 import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
@@ -23,6 +24,7 @@ import { AuthModule } from './modules/auth/auth.module';
     ReservationsModule,
     PlatosModule,
     CategoriesModule,
+    PedidosModule,
     AuthModule,
   ],
   controllers: [],
