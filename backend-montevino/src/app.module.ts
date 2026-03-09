@@ -7,6 +7,7 @@ import { ReservationsModule } from './modules/reservations/reservations.module';
 import { PlatosModule } from './modules/platos/platos.module';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { PedidosModule } from './modules/pedidos/pedidos.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -24,9 +25,9 @@ import { PedidosModule } from './modules/pedidos/pedidos.module';
     PlatosModule,
     CategoriesModule,
     PedidosModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
 })
-
 export class AppModule {}
