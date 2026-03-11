@@ -17,50 +17,54 @@ export class PlatosService {
   ) {}
 
   async seeder() {
-  const categories = await this.categoriesRepository.find();
+    const categories = await this.categoriesRepository.find();
 
-  const platosToSeed = (data as any[]).map((item) => {
-    const category = categories.find((cat) => cat.name === item.category);
+    const platosToSeed = (data as any[])
+      .map((item) => {
+        const category = categories.find((cat) => cat.name === item.category);
 
-    if (!category) {
-      console.warn(`Categoría "${item.category}" no encontrada para el plato "${item.name}"`);
-      return null;
-    }
+        if (!category) {
+          console.warn(
+            `Categoría "${item.category}" no encontrada para el plato "${item.name}"`,
+          );
+          return null;
+        }
 
-    return {
-      name: item.name,
-      price: item.price,
-      ingredientes: Array.isArray(item.ingredientes) 
-        ? item.ingredientes.join(', ') 
-        : item.ingredientes,
-      description: item.description,
-      imageUrl: item.imageUrl,
-      stock: item.stock,
-      category: category,
-    };
-  }).filter(plato => plato !== null);
+        return {
+          name: item.name,
+          price: item.price,
+          ingredientes: Array.isArray(item.ingredientes)
+            ? item.ingredientes.join(', ')
+            : item.ingredientes,
+          description: item.description,
+          imageUrl: item.imageUrl,
+          stock: item.stock,
+          category: category,
+        };
+      })
+      .filter((plato) => plato !== null);
 
-  await this.platosRepository.upsert(platosToSeed, ['name']);
+    await this.platosRepository.upsert(platosToSeed, ['name']);
 
-  return 'Platos Added';
-}
-
-  async create(createPlatoDto: CreatePlatosDto) {
-  const category = await this.categoriesRepository.findOneBy({ 
-    id: createPlatoDto.categoryId 
-  });
-
-  if (!category) {
-    throw new NotFoundException('Categoría no encontrada');
+    return 'Platos Added';
   }
 
-  const newPlato = this.platosRepository.create({
-    ...createPlatoDto,
-    category: category 
-  });
-  
-  return await this.platosRepository.save(newPlato);
-}
+  async create(createPlatoDto: CreatePlatosDto) {
+    const category = await this.categoriesRepository.findOneBy({
+      id: createPlatoDto.categoryId,
+    });
+
+    if (!category) {
+      throw new NotFoundException('Categoría no encontrada');
+    }
+
+    const newPlato = this.platosRepository.create({
+      ...createPlatoDto,
+      category: category,
+    });
+
+    return await this.platosRepository.save(newPlato);
+  }
 
   async getPlatos(page: number, limit: number) {
     return await this.platosRepository.find({
@@ -71,42 +75,41 @@ export class PlatosService {
   }
 
   findOne(id: string) {
-  return this.platosRepository.findOneBy({ id });
+    return this.platosRepository.findOneBy({ id });
   }
 
   async update(id: string, updatePlatosDto: UpdatePlatosDto) {
-  const plato = await this.platosRepository.preload({
-    id: id,
-    ...updatePlatosDto,
-  });
-
-  if (!plato) {
-    throw new NotFoundException(`El plato con ID ${id} no fue encontrado`);
-  }
-
-  if (updatePlatosDto.categoryId) {
-    const category = await this.categoriesRepository.findOneBy({ 
-      id: updatePlatosDto.categoryId 
+    const plato = await this.platosRepository.preload({
+      id: id,
+      ...updatePlatosDto,
     });
-    
-    if (!category) {
-      throw new NotFoundException('La nueva categoría no existe');
+
+    if (!plato) {
+      throw new NotFoundException(`El plato con ID ${id} no fue encontrado`);
     }
-    plato.category = category;
+
+    if (updatePlatosDto.categoryId) {
+      const category = await this.categoriesRepository.findOneBy({
+        id: updatePlatosDto.categoryId,
+      });
+
+      if (!category) {
+        throw new NotFoundException('La nueva categoría no existe');
+      }
+      plato.category = category;
+    }
+
+    return await this.platosRepository.save(plato);
   }
 
-  return await this.platosRepository.save(plato);
-}
+  async remove(id: string) {
+    const plato = await this.findOne(id);
 
-async remove(id: string) {
-  const plato = await this.findOne(id); 
-  
-  if (!plato) {
-    throw new NotFoundException(`El plato con ID ${id} no existe`);
+    if (!plato) {
+      throw new NotFoundException(`El plato con ID ${id} no existe`);
+    }
+
+    await this.platosRepository.remove(plato);
+    return { message: `Plato '${plato.name}' eliminado correctamente` };
   }
-
-  await this.platosRepository.remove(plato);
-  return { message: `Plato '${plato.name}' eliminado correctamente` };
-}
-
 }

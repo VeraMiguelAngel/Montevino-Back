@@ -1,24 +1,33 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
-import { Reservations } from "../../reservations/entities/reservation.entity";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
+import { Reservations } from '../../reservations/entities/reservation.entity';
+import { Platos } from 'src/modules/platos/entities/platos.entity';
 
-@Entity({ name: "PEDIDOS" })
+@Entity({ name: 'PEDIDOS' })
 export class Pedidos {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @Column()
-    quantity: number;
+  @Column()
+  quantity: number;
 
-    @Column({ 
-        type: "decimal", 
-        precision: 10, 
-        scale: 2 
-    })
-    price: number;
+  @Column({
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
+  })
+  price: number;
 
-    @Column()
-    menuItemId: number;
+  @ManyToOne(() => Platos)
+  @JoinColumn({ name: 'platoId' })
+  menuItem: Platos;
 
-    @ManyToOne(() => Reservations, (reservation) => reservation.pedidos)
-    reservation: Reservations;
+  @ManyToOne(() => Reservations, (reservation) => reservation.pedidos)
+  @JoinColumn({ name: 'reservationId' })
+  reservation: Reservations;
 }

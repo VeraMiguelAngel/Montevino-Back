@@ -1,27 +1,38 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  IsArray,
+  IsDateString,
+  IsMilitaryTime,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Min,
+  ValidateNested,
+} from 'class-validator';
+import { CreatePedidoDto } from 'src/modules/pedidos/dto/create-pedido.dto';
 
 export class CreateReservationDto {
+  @IsDateString()
   @IsNotEmpty()
-  @IsString()
-  reservationDate: Date;
+  reservationDate: string;
 
-  @IsNotEmpty()
   @IsString()
+  @IsNotEmpty()
+  @IsMilitaryTime({ message: 'El horario debe tener formato HH:MM (24hs)' })
   startTime: string;
 
-  @IsNotEmpty()
-  @IsString()
-  endTime: string;
-
-  @IsNotEmpty()
   @IsNumber()
+  @Min(1)
   peopleCount: number;
 
-  @IsNotEmpty()
   @IsString()
-  extraTime: string;
+  @IsOptional()
+  notes?: string;
 
-  @IsNotEmpty()
-  @IsString()
-  totalPrice: string;
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreatePedidoDto)
+  pedidos?: CreatePedidoDto[];
 }
