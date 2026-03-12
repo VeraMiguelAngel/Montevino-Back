@@ -24,7 +24,7 @@ export class ReservationsService {
     private tablesService: TablesService,
   ) {}
 
-  async create(createReservationDto: CreateReservationDto) {
+  async create(createReservationDto: CreateReservationDto, user) {
     const { pedidos, ...reservationData } = createReservationDto;
     const reservationDate = new Date(createReservationDto.reservationDate);
     const today = new Date();
@@ -44,15 +44,18 @@ export class ReservationsService {
       );
     }
 
-    const startTime = createReservationDto.startTime;
+    const hour = parseInt(createReservationDto.startTime.split(':')[0]);
 
-    if (startTime < '18:00' || startTime > '00:00') {
+    if (hour < 18 || hour > 23) {
       throw new BadRequestException(
-        'Las reservas solo se pueden hacer entre 18:00 y 23:00',
+        'Las reservas solo se pueden hacer entre las 18:00 y 23:00',
       );
     }
 
-    const table = await this.tablesService.findAvailableTable();
+    const table = await this.tablesService.findAvailableTable(
+      createReservationDto.reservationDate,
+      createReservationDto.startTime,
+    );
 
     if (!table) {
       throw new NotFoundException('No hay mesas disponibles');
@@ -60,6 +63,7 @@ export class ReservationsService {
 
     const reservation = this.reservationsRepository.create({
       ...reservationData,
+      user: user,
       table: table,
       totalPrice: 0,
       depositAmount: 5000,
@@ -121,6 +125,11 @@ export class ReservationsService {
       depositAmount: Number(fullReservation.depositAmount),
       status: fullReservation.status,
       notes: fullReservation.notes,
+
+      user: {
+        name: fullReservation.user.name,
+        email: fullReservation.user.email,
+      },
 
       table: {
         tableNumber: fullReservation.table.tableNumber,

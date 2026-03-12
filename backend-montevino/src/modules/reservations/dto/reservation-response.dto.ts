@@ -15,6 +15,11 @@ export class ReservationResponseDto {
 
   notes?: string;
 
+  user: {
+    name: string;
+    email: string;
+  };
+
   table: {
     tableNumber: number;
   };

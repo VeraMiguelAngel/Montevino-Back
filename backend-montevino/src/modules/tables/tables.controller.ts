@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { TablesService } from './tables.service';
 import { CreateTableDto } from './dto/create-table.dto';
 
@@ -14,5 +14,13 @@ export class TablesController {
   @Get()
   findAll() {
     return this.tablesService.findAll();
+  }
+
+  @Get('availability')
+  getTablesAvailability(
+    @Query('date') date: string,
+    @Query('time') time: string,
+  ) {
+    return this.tablesService.getTablesAvailability(date, time);
   }
 }
