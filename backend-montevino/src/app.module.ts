@@ -8,6 +8,7 @@ import { PlatosModule } from './modules/platos/platos.module';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { PedidosModule } from './modules/pedidos/pedidos.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { AuthModule } from './modules/auth/auth.module';
     PedidosModule,
     AuthModule,
   ],
+  controllers: [AppController],
 })
 export class AppModule implements NestModule {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
