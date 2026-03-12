@@ -1,8 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, IsNumber, IsBoolean, IsOptional, IsUrl, Min, IsUUID } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsString,
+  IsNumber,
+  IsOptional,
+  IsUrl,
+  Min,
+  IsUUID,
+} from 'class-validator';
 
 export class CreatePlatosDto {
-  @ApiProperty({ description: 'Nombre del plato', example: 'Tallarines al Pesto' })
+  @ApiProperty({
+    description: 'Nombre del plato',
+    example: 'Tallarines al Pesto',
+  })
   @IsString()
   @IsNotEmpty()
   name: string;
@@ -12,7 +23,7 @@ export class CreatePlatosDto {
   @IsNotEmpty()
   description: string;
 
-  @ApiProperty({ description: 'Precio del plato', example: 15.50 })
+  @ApiProperty({ description: 'Precio del plato', example: 15.5 })
   @IsNumber()
   @Min(0)
   price: number;
@@ -22,7 +33,10 @@ export class CreatePlatosDto {
   @IsOptional()
   imageUrl?: string;
 
-  @ApiProperty({ example: 'uuid-de-la-categoria', description: 'ID de la categoría asociada' })
+  @ApiProperty({
+    example: 'uuid-de-la-categoria',
+    description: 'ID de la categoría asociada',
+  })
   @IsUUID()
   @IsNotEmpty()
   categoryId: string;
