@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import data from 'data.json';
 import { Category } from './entities/category.entity';
@@ -46,7 +46,7 @@ findAll() {
   });
 
   if (existingCategory) {
-    throw new NotFoundException(`La categoría '${categorieData.name}' ya existe`);
+    throw new ConflictException(`La categoría '${categorieData.name}' ya existe`);
   }
 
   const newCategorie = this.categoriesRepository.create(categorieData);

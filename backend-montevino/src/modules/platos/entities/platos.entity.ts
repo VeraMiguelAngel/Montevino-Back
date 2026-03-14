@@ -1,5 +1,6 @@
 import { Category } from 'src/modules/categories/entities/category.entity';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { TipoProducto } from '../dto/create-platos.dto';
 
 @Entity({ name: 'platos' })
 
@@ -48,5 +49,12 @@ export class Platos {
   @ManyToOne(() => Category, (category) => category.platos)
     @JoinColumn({ name: 'category_id' })
     category: Category;
+
+  @Column({
+      type: 'enum',
+      enum: TipoProducto,
+      default: TipoProducto.PLATOS,
+    })
+    type: TipoProducto;
 
 }

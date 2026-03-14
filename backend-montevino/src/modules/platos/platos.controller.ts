@@ -2,10 +2,10 @@ import { Controller, Body, Get, Param, UseGuards, Put, Delete, ParseIntPipe, Par
 // import { AuthGuard } from '';
 import { Roles } from '../../decorators/roles.decorator';
 // import { RolesGuard } from 'src/auth/guards/roles.guard';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 import { PlatosService } from './platos.service';
 import { UpdatePlatosDto } from './dto/update-platos.dto';
-import { CreatePlatosDto } from './dto/create-platos.dto';
+import { CreatePlatosDto, TipoProducto } from './dto/create-platos.dto';
 
 @Controller('platos')
 // @UseGuards(AuthGuard)
@@ -13,16 +13,18 @@ export class PlatosController {
   constructor(private readonly platosService: PlatosService) {}
 
   // @ApiBearerAuth()
-  // @Get()
   // // @Roles('admin')
   // // @UseGuards(RolesGuard) 
-  // getPlatos() {
-  //   return this.platosService.findAll();
-  // }
-
   @Get()
-  getPlatos(@Query('page') page: number = 1, @Query('limit') limit: number = 5) {
-    return this.platosService.getPlatos(page, limit);
+  @ApiQuery({ name: 'type', enum: TipoProducto, required: false })
+  @ApiQuery({ name: 'category', type: String, required: false })
+  getPlatos(
+    @Query('page') page: number = 1, 
+    @Query('limit') limit: number = 5,
+    @Query('type') type?: TipoProducto,
+    @Query('category') category?: string
+  ) {
+    return this.platosService.getPlatos(page, limit, type, category);
   }
 
   @Post('seeder')
@@ -31,13 +33,8 @@ export class PlatosController {
   }
 
   // @ApiBearerAuth()
-  // @Get(':id')
   // // @Roles('admin')
   // // @UseGuards(RolesGuard)
-  // getPlato(@Param('id', ParseUUIDPipe) id: string) {
-  //   return this.platosService.findOne(id);
-  // }
-
   @Get(':id')
   findOne(@Param('id', ParseUUIDPipe) id: string) {
     return this.platosService.findOne(id);
@@ -45,11 +42,6 @@ export class PlatosController {
 
   // @ApiBearerAuth()
   // // @UseGuards(AuthGuard)
-  // @Put(':id')
-  // update(@Param('id', ParseUUIDPipe) id: string, @Body() updatePlatosDto: UpdatePlatosDto) {
-  //   return this.platosService.update(id, updatePlatosDto);
-  // }
-
   @Put(':id')
   update(
     @Param('id', ParseUUIDPipe) id: string, 
@@ -68,11 +60,6 @@ export class PlatosController {
   // @ApiBearerAuth()
   // // @Roles('admin')
   // // @UseGuards(AuthGuard, RolesGuard)
-  // @Delete(':id')
-  // remove(@Param('id', ParseUUIDPipe) id: string) {
-  //   return this.platosService.remove(id);
-  // }
-
   @Delete(':id')
   remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.platosService.remove(id);

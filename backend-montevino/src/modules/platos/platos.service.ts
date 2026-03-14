@@ -4,7 +4,7 @@ import data from 'data.json';
 import { Repository } from 'typeorm';
 import { Platos } from './entities/platos.entity';
 import { Category } from '../categories/entities/category.entity';
-import { CreatePlatosDto } from './dto/create-platos.dto';
+import { CreatePlatosDto, TipoProducto } from './dto/create-platos.dto';
 import { UpdatePlatosDto } from './dto/update-platos.dto';
 
 @Injectable()
@@ -37,6 +37,7 @@ export class PlatosService {
       imageUrl: item.imageUrl,
       stock: item.stock,
       category: category,
+      type: item.type,
     };
   }).filter(plato => plato !== null);
 
@@ -62,9 +63,16 @@ export class PlatosService {
   return await this.platosRepository.save(newPlato);
 }
 
-  async getPlatos(page: number, limit: number) {
+  async getPlatos(page: number, limit: number, type?: TipoProducto, category?: string) {
+    const where: any = {};
+
+    if (type) where.type = type;
+
+    if (category) where.category = { name: category };
+
     return await this.platosRepository.find({
       relations: { category: true },
+      where: where,
       skip: (page - 1) * limit,
       take: limit,
     });
