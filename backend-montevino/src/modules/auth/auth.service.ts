@@ -26,10 +26,16 @@ export class AuthService {
         name: dto.name,
       });
 
-      return await this.usersService.create({
+      const user = await this.usersService.create({
         ...dto,
         auth0Id: auth0Res.user_id,
       } as any);
+
+      return {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      };
     } catch (error: any) {
       if (error.statusCode === 409) {
         throw new ConflictException(

@@ -26,6 +26,18 @@ export class ReservationsService {
 
   async create(createReservationDto: CreateReservationDto, user) {
     const { pedidos, ...reservationData } = createReservationDto;
+
+    const existingReservation = await this.reservationsRepository.findOne({
+      where: {
+        user: { id: user.id },
+        reservationDate: reservationData.reservationDate,
+      },
+    });
+
+    if (existingReservation) {
+      throw new BadRequestException('Ya tenés una reserva para este día');
+    }
+
     const reservationDate = new Date(createReservationDto.reservationDate);
     const today = new Date();
 

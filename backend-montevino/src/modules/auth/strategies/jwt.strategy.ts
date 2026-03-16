@@ -21,7 +21,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) {
-    // payload.sub es el auth0Id que viene en el token
     const user = await this.userService.findByAuth0Id(payload.sub);
 
     if (!user) {
@@ -30,6 +29,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       );
     }
 
-    return user; // Esto queda disponible en todos tus controladores como req.user
+    return user;
   }
 }
