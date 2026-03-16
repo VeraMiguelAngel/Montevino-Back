@@ -109,7 +109,7 @@ export class ReservationsService {
 
     const fullReservation = await this.reservationsRepository.findOne({
       where: { id: reservation.id },
-      relations: ['table', 'pedidos', 'pedidos.menuItem'],
+      relations: ['table', 'user', 'pedidos', 'pedidos.menuItem'],
     });
 
     if (!fullReservation) {
@@ -147,7 +147,7 @@ export class ReservationsService {
 
   findAll() {
     return this.reservationsRepository.find({
-      relations: ['table', 'user', 'pedidos'],
+      relations: ['table', 'user', 'pedidos', 'pedidos.menuItem'],
     });
   }
 }
