@@ -6,6 +6,7 @@ import { Platos } from './entities/platos.entity';
 import { Category } from '../categories/entities/category.entity';
 import { CreatePlatosDto, TipoProducto } from './dto/create-platos.dto';
 import { UpdatePlatosDto } from './dto/update-platos.dto';
+import { FileUploadRepository } from 'src/file-upload/file-upload.repository';
 
 @Injectable()
 export class PlatosService {
@@ -14,39 +15,48 @@ export class PlatosService {
     private readonly platosRepository: Repository<Platos>,
     @InjectRepository(Category)
     private readonly categoriesRepository: Repository<Category>,
+    private readonly fileUploadRepository: FileUploadRepository,
   ) {}
 
   async seeder() {
   const categories = await this.categoriesRepository.find();
+  const platosExistentes = await this.platosRepository.find();
 
-  const platosToSeed = (data as any[]).map((item) => {
+  for (const item of data as any[]) {
+    const yaExiste = platosExistentes.find(p => p.name === item.name);
+    if (yaExiste) continue;
+
     const category = categories.find((cat) => cat.name === item.category);
+    if (!category) continue;
 
-    if (!category) {
-      console.warn(`Categoría "${item.category}" no encontrada para el plato "${item.name}"`);
-      return null;
+    let finalImageUrl = item.imageUrl;
+    try {
+      const upload = await this.fileUploadRepository.uploadImageFromUrl(item.imageUrl);
+      finalImageUrl = upload.secure_url;
+      console.log(`Imagen subida para: ${item.name}`);
+    } catch (error) {
+      console.error(`Error subiendo imagen de ${item.name}, usando original.`);
     }
 
-    return {
+    const nuevoPlato = this.platosRepository.create({
       name: item.name,
       price: item.price,
-      ingredientes: Array.isArray(item.ingredientes) 
-        ? item.ingredientes.join(', ') 
-        : item.ingredientes,
+      ingredientes: Array.isArray(item.ingredientes) ? item.ingredientes.join(', ') : item.ingredientes,
       description: item.description,
-      imageUrl: item.imageUrl,
+      imageUrl: finalImageUrl,
       stock: item.stock,
       category: category,
       type: item.type,
-    };
-  }).filter(plato => plato !== null);
+    });
 
-  await this.platosRepository.upsert(platosToSeed, ['name']);
+    await this.platosRepository.save(nuevoPlato);
+    await new Promise(resolve => setTimeout(resolve, 300));
+  }
 
-  return 'Platos Added';
+  return 'Platos Added with Cloudinary Images';
 }
 
-  async create(createPlatoDto: CreatePlatosDto) {
+ async create(createPlatoDto: CreatePlatosDto) {
   const category = await this.categoriesRepository.findOneBy({ 
     id: createPlatoDto.categoryId 
   });
@@ -55,8 +65,21 @@ export class PlatosService {
     throw new NotFoundException('Categoría no encontrada');
   }
 
+  let finalImageUrl = createPlatoDto.imageUrl;
+
+  if (finalImageUrl && !finalImageUrl.includes('cloudinary.com')) {
+    try {
+      console.log(`Subiendo nueva imagen a Cloudinary para el plato: ${createPlatoDto.name}`);
+      const upload = await this.fileUploadRepository.uploadImageFromUrl(finalImageUrl);
+      finalImageUrl = upload.secure_url;
+    } catch (error) {
+      console.error('Error al subir imagen en create, se usará la URL original:', error.message);
+    }
+  }
+
   const newPlato = this.platosRepository.create({
     ...createPlatoDto,
+    imageUrl: finalImageUrl,
     category: category 
   });
   

@@ -20,4 +20,17 @@ export class FileUploadRepository {
             toStream(file.buffer).pipe(upload);
         });
     }
+
+    async uploadImageFromUrl(url: string): Promise<UploadApiResponse> {
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader.upload(
+      url,
+      { resource_type: "image", folder: "menu_platos" },
+      (error, result) => {
+        if (error) reject(error);
+        else resolve(result!);
+      }
+    );
+  });
+}
 }
