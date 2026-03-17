@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { ReservationsService } from './reservations.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth-guard';
@@ -24,5 +33,19 @@ export class ReservationsController {
   @Get()
   findAll() {
     return this.reservationsService.findAll();
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Get('myreservations')
+  getMyReservations(@Req() req) {
+    return this.reservationsService.findByUser(req.user.id);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Patch(':id/cancel')
+  cancelReservation(@Param('id') id: string, @Req() req) {
+    return this.reservationsService.cancel(id, req.user);
   }
 }

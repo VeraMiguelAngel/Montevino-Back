@@ -56,4 +56,14 @@ export class UsersService {
 
     return { message: 'User deleted successfully' };
   }
+
+  async findByEmail(email: string) {
+    return await this.usersRepository.findOne({
+      where: { email },
+    });
+  }
+
+  async updateAuth0Id(userId: string, auth0Id: string) {
+    await this.usersRepository.update(userId, { auth0Id });
+  }
 }
