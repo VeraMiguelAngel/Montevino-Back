@@ -2,7 +2,7 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './modules/users/users.module';
-import typeormConfig from './config/typeorm';
+import typeorm from './config/typeorm';
 import { ReservationsModule } from './modules/reservations/reservations.module';
 import { PlatosModule } from './modules/platos/platos.module';
 import { CategoriesModule } from './modules/categories/categories.module';
@@ -15,13 +15,12 @@ import { TablesModule } from './modules/tables/tables.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      load: [typeorm],
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: () => ({
-        ...typeormConfig(), // usa la config que definimos en typeorm.ts
-      }),
+      useFactory: (config: ConfigService) => config.get('typeorm')!,
     }),
     UsersModule,
     ReservationsModule,
