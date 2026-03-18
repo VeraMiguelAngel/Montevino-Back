@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -11,6 +12,8 @@ import { TablesService } from '../tables/tables.service';
 import { Pedidos } from '../pedidos/entities/pedido.entity';
 import { Platos } from '../platos/entities/platos.entity';
 import { ReservationResponseDto } from './dto/reservation-response.dto';
+import { Users } from '../users/entities/user.entity';
+import { reservationStatus } from './reservation-status.enum';
 
 @Injectable()
 export class ReservationsService {
@@ -26,6 +29,19 @@ export class ReservationsService {
 
   async create(createReservationDto: CreateReservationDto, user) {
     const { pedidos, ...reservationData } = createReservationDto;
+
+    const existingReservation = await this.reservationsRepository.findOne({
+      where: {
+        user: { id: user.id },
+        reservationDate: reservationData.reservationDate,
+        status: reservationStatus.CONFIRMADA,
+      },
+    });
+
+    if (existingReservation) {
+      throw new BadRequestException('Ya tenés una reserva para este día');
+    }
+
     const reservationDate = new Date(createReservationDto.reservationDate);
     const today = new Date();
 
@@ -66,7 +82,7 @@ export class ReservationsService {
       user: user,
       table: table,
       totalPrice: 0,
-      depositAmount: 5000,
+      depositAmount: 0,
     });
 
     await this.reservationsRepository.save(reservation);
@@ -99,10 +115,13 @@ export class ReservationsService {
     }
     reservation.totalPrice = total;
 
+    const baseAmount = 2000 * reservation.peopleCount;
+
     if (total > 0) {
-      reservation.depositAmount = total * 0.15;
+      const percentage = Number(total) * 0.15;
+      reservation.depositAmount = baseAmount + percentage;
     } else {
-      reservation.depositAmount = 5000;
+      reservation.depositAmount = baseAmount + 5000;
     }
 
     await this.reservationsRepository.save(reservation);
@@ -145,9 +164,95 @@ export class ReservationsService {
     return response;
   }
 
-  findAll() {
-    return this.reservationsRepository.find({
+  async findAll() {
+    const reservations = await this.reservationsRepository.find({
       relations: ['table', 'user', 'pedidos', 'pedidos.menuItem'],
     });
+
+    return reservations.map((res) => ({
+      id: res.id,
+      reservationDate: res.reservationDate,
+      startTime: res.startTime,
+      peopleCount: res.peopleCount,
+      totalPrice: Number(res.totalPrice),
+      depositAmount: Number(res.depositAmount),
+      status: res.status,
+
+      user: {
+        name: res.user.name,
+        email: res.user.email,
+      },
+
+      table: {
+        tableNumber: res.table.tableNumber,
+      },
+
+      pedidos: res.pedidos.map((p) => ({
+        quantity: p.quantity,
+        price: Number(p.price),
+        name: p.menuItem.name,
+      })),
+    }));
+  }
+
+  async findByUser(userId: string) {
+    const reservations = await this.reservationsRepository.find({
+      where: { user: { id: userId } },
+      relations: ['table', 'pedidos', 'pedidos.menuItem'],
+    });
+
+    return reservations.map((res) => ({
+      id: res.id,
+      reservationDate: res.reservationDate,
+      startTime: res.startTime,
+      peopleCount: res.peopleCount,
+      totalPrice: Number(res.totalPrice),
+      depositAmount: Number(res.depositAmount),
+      status: res.status,
+
+      table: {
+        tableNumber: res.table.tableNumber,
+      },
+
+      pedidos: res.pedidos.map((p) => ({
+        quantity: p.quantity,
+        price: Number(p.price),
+        name: p.menuItem.name,
+      })),
+    }));
+  }
+
+  async cancel(reservationId: string, user: Users) {
+    const reservation = await this.reservationsRepository.findOne({
+      where: { id: reservationId },
+      relations: ['pedidos', 'pedidos.menuItem', 'user', 'table'],
+    });
+
+    if (!reservation) {
+      throw new NotFoundException('Reserva no encontrada');
+    }
+
+    if (reservation.user.id !== user.id) {
+      throw new ForbiddenException('No podés cancelar esta reserva');
+    }
+
+    if (reservation.status === reservationStatus.CANCELADA) {
+      throw new BadRequestException('La reserva ya está cancelada');
+    }
+
+    for (const pedido of reservation.pedidos) {
+      pedido.menuItem.stock += pedido.quantity;
+      await this.platosRepository.save(pedido.menuItem);
+    }
+
+    reservation.status = reservationStatus.CANCELADA;
+
+    await this.reservationsRepository.save(reservation);
+
+    return {
+      message: 'Reserva cancelada correctamente',
+      reservationId: reservation.id,
+      status: reservation.status,
+    };
   }
 }

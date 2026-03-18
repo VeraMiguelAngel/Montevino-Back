@@ -26,10 +26,16 @@ export class AuthService {
         name: dto.name,
       });
 
-      return await this.usersService.create({
+      const user = await this.usersService.create({
         ...dto,
         auth0Id: auth0Res.user_id,
       } as any);
+
+      return {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      };
     } catch (error: any) {
       if (error.statusCode === 409) {
         throw new ConflictException(
@@ -101,13 +107,15 @@ export class AuthService {
 
       const { id_token, access_token } = response.data;
       const decoded: any = jwt.decode(id_token);
+      let user = await this.usersService.findByAuth0Id(decoded.sub);
 
-      const user = await this.usersService.create({
-        auth0Id: decoded.sub,
-        email: decoded.email,
-        name: decoded.name,
-      } as any);
-
+      if (!user) {
+        user = await this.usersService.create({
+          auth0Id: decoded.sub,
+          email: decoded.email,
+          name: decoded.name,
+        } as any);
+      }
       return {
         access_token,
         user,

@@ -23,6 +23,11 @@ export class CreatePlatosDto {
   @IsNotEmpty()
   description: string;
 
+  @ApiProperty({ description: 'Ingredientes del plato' })
+  @IsString()
+  @IsNotEmpty()
+  ingredients: string;
+
   @ApiProperty({ description: 'Precio del plato', example: 15.5 })
   @IsNumber()
   @Min(0)
