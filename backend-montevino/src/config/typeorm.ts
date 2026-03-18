@@ -2,7 +2,7 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 import { config as dotenvConfig } from 'dotenv';
 import { registerAs } from '@nestjs/config';
 
-dotenvConfig({ path: '.env' });
+dotenvConfig({ path: '.development.env' });
 
 const isProd = process.env.NODE_ENV === 'production';
 

@@ -7,6 +7,7 @@ import { ReservationsModule } from './modules/reservations/reservations.module';
 import { PlatosModule } from './modules/platos/platos.module';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { FileUploadModule } from './file-upload/file-upload.module';
 import { AppController } from './app.controller';
 import { TablesModule } from './modules/tables/tables.module';
 
@@ -27,6 +28,7 @@ import { TablesModule } from './modules/tables/tables.module';
     PlatosModule,
     CategoriesModule,
     AuthModule,
+    FileUploadModule,
     TablesModule,
   ],
   controllers: [AppController],

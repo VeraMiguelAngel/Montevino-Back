@@ -1,110 +1,1142 @@
 [
-    {
-      "name": "Sushi Premium",
-      "price": 10.99,
-      "ingredientes": "Pescado fresco, arroz sazonado, alga nory, soja y wasabi.",
-      "description": "Una experiencia sensorial que celebra la pureza del mar. Elaborado con pesca del día de grado exportación y arroz sazonado con un equilibrio perfecto de vinagre de arroz, azúcar y sal. Cada pieza es moldeada a mano, logrando una textura que se deshace en el paladar, resaltando el sabor natural del pescado fresco y toques sutiles de umami",
-      "imageUrl": "https://acdn-us.mitiendanube.com/stores/001/350/887/products/descartables-221-64950c8003461dba7516388920880619-1024-1024.webp",
-      "stock": 50,
-      "category": "Pescado"
-    },
-
-    {
-    "name": "Carne a la parrilla",
-    "price": 8999,
-    "ingredientes": "Asado.",
-    "description": "Cortes seleccionados cocinados a fuego lento sobre brasas de leña o carbón. El resultado es una carne jugosa por dentro, con una costra dorada y ese inconfundible toque ahumado que solo el fuego directo puede dar.",
-    "imageUrl":
-      "https://c.pxhere.com/photos/97/5d/pork_yummy_delicious_dinner_tasty_cuisine_grilled_meat-1386775.jpg!d",
+  {
+    "name": "Bife de Chorizo",
+    "price": 24,
+    "ingredientes": ["carne vacuna", "sal gruesa", "pimienta", "papas rústicas"],
+    "imageUrl": "https://images.unsplash.com/photo-1600891964092-4316c288032e",
+    "description": "Bife de chorizo jugoso a la parrilla con papas rústicas.",
+    "stock": 20,
+    "category": "Carne",
+    "type": "platos"
+  },
+  {
+    "name": "Entraña Grillada",
+    "price": 22,
+    "ingredientes": ["entraña", "sal", "chimichurri"],
+    "imageUrl": "https://images.unsplash.com/photo-1558030006-450675393462",
+    "description": "Entraña tierna a la parrilla con chimichurri.",
+    "stock": 18,
+    "category": "Carne",
+    "type": "platos"
+  },
+  {
+    "name": "Vacío al Horno",
+    "price": 23,
+    "ingredientes": ["vacío", "ajo", "perejil", "papas"],
+    "imageUrl": "https://images.unsplash.com/photo-1544025162-d76694265947",
+    "description": "Vacío cocinado lentamente con papas.",
+    "stock": 14,
+    "category": "Carne",
+    "type": "platos"
+  },
+  {
+    "name": "Ojo de Bife",
+    "price": 26,
+    "ingredientes": ["ojo de bife", "sal", "pimienta"],
+    "imageUrl": "https://images.unsplash.com/photo-1600891964092-4316c288032e",
+    "description": "Corte premium sellado a la parrilla.",
+    "stock": 12,
+    "category": "Carne",
+    "type": "platos"
+  },
+  {
+    "name": "Milanesa de Carne",
+    "price": 17,
+    "ingredientes": ["carne vacuna", "pan rallado", "huevo", "ajo"],
+    "imageUrl": "https://images.unsplash.com/photo-1512152272829-e3139592d56f",
+    "description": "Milanesa crocante de carne con papas fritas.",
+    "stock": 22,
+    "category": "Carne",
+    "type": "platos"
+  },
+  {
+    "name": "Salmón Grillado",
+    "price": 23,
+    "ingredientes": ["salmón", "limón", "aceite de oliva", "espárragos"],
+    "imageUrl": "https://images.unsplash.com/photo-1467003909585-2f8a72700288",
+    "description": "Filete de salmón grillado con espárragos.",
+    "stock": 12,
+    "category": "Pescado",
+    "type": "platos"
+  },
+  {
+    "name": "Merluza al Horno",
+    "price": 19,
+    "ingredientes": ["merluza", "ajo", "limón", "perejil"],
+    "imageUrl": "https://images.unsplash.com/photo-1559847844-5315695dadae",
+    "description": "Merluza al horno con hierbas.",
+    "stock": 16,
+    "category": "Pescado",
+    "type": "platos"
+  },
+  {
+    "name": "Trucha Patagónica",
+    "price": 21,
+    "ingredientes": ["trucha", "manteca", "limón", "romero"],
+    "imageUrl": "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2",
+    "description": "Trucha grillada con romero.",
+    "stock": 10,
+    "category": "Pescado",
+    "type": "platos"
+  },
+  {
+    "name": "Paella de Mariscos",
+    "price": 26,
+    "ingredientes": ["arroz", "langostinos", "calamares", "mejillones", "azafrán"],
+    "imageUrl": "https://images.unsplash.com/photo-1534080564583-6be75777b70a",
+    "description": "Paella con mariscos frescos.",
+    "stock": 10,
+    "category": "Mariscos",
+    "type": "platos"
+  },
+  {
+    "name": "Langostinos al Ajillo",
+    "price": 24,
+    "ingredientes": ["langostinos", "ajo", "aceite de oliva", "perejil"],
+    "imageUrl": "https://images.unsplash.com/photo-1625944525533-473f1c3d54e7",
+    "description": "Langostinos salteados con ajo.",
+    "stock": 14,
+    "category": "Mariscos",
+    "type": "platos"
+  },
+  {
+    "name": "Pollo al Limón",
+    "price": 18,
+    "ingredientes": ["pollo", "limón", "ajo", "aceite de oliva"],
+    "imageUrl": "https://images.unsplash.com/photo-1604908176997-4317b9e2b3d6",
+    "description": "Pechuga de pollo al limón.",
+    "stock": 18,
+    "category": "Pollo",
+    "type": "platos"
+  },
+  {
+    "name": "Pollo Grillado con Verduras",
+    "price": 20,
+    "ingredientes": ["pollo", "zucchini", "pimientos", "aceite de oliva"],
+    "imageUrl": "https://images.unsplash.com/photo-1604908177522-040c0c9b61a7",
+    "description": "Pollo grillado con verduras.",
+    "stock": 17,
+    "category": "Pollo",
+    "type": "platos"
+  },
+  {
+    "name": "Costillas BBQ",
+    "price": 25,
+    "ingredientes": ["costillas", "salsa BBQ", "miel", "especias"],
+    "imageUrl": "https://images.unsplash.com/photo-1544025162-d76694265947",
+    "description": "Costillas de cerdo con salsa BBQ.",
+    "stock": 12,
+    "category": "Parrilla",
+    "type": "platos"
+  },
+  {
+    "name": "Chorizo a la Parrilla",
+    "price": 12,
+    "ingredientes": ["chorizo", "pan", "chimichurri"],
+    "imageUrl": "https://images.unsplash.com/photo-1598514982831-2fcb7f02d293",
+    "description": "Chorizo argentino a la parrilla.",
+    "stock": 30,
+    "category": "Parrilla",
+    "type": "platos"
+  },
+  {
+    "name": "Limonada Natural",
+    "price": 6,
+    "ingredientes": ["limón", "agua", "azúcar", "hielo"],
+    "imageUrl": "https://images.unsplash.com/photo-1523371683702-6d82b4b06c44",
+    "description": "Limonada fresca.",
     "stock": 50,
-    "category": "Parrilla"
-    },
-
-    {
-    "name": "P.B.C",
-    "price": 3999,
-    "ingredientes": "Carne Premium, queso cheddar, cebolla caramelizada y beacon.",
-    "description": "Un blend de carne premium sellado a la plancha o parrilla para lograr una costra caramelizada y un corazón jugoso. Servida en pan brioche suave, acompañada de ingredientes frescos y quesos fundidos que crean la explosión de sabor perfecta en cada bocado.",
-    "imageUrl":
-      "https://c.pxhere.com/photos/f8/cf/beef_burger_fries_yummy_delicious_dinner_tasty_cuisine-1386769.jpg!d",
+    "category": "Jugos",
+    "type": "bebidas"
+  },
+  {
+    "name": "Asado de Tira",
+    "price": 24,
+    "ingredientes": ["asado", "sal", "chimichurri"],
+    "imageUrl": "https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba",
+    "description": "Tiras de asado cocidas a la parrilla.",
+    "stock": 15,
+    "category": "Carne",
+    "type": "platos"
+  },
+  {
+    "name": "Lomo a la Pimienta",
+    "price": 27,
+    "ingredientes": ["lomo", "pimienta negra", "crema", "papas"],
+    "imageUrl": "https://images.unsplash.com/photo-1546833999-b9f581a1996d",
+    "description": "Lomo con salsa cremosa de pimienta.",
+    "stock": 11,
+    "category": "Carne",
+    "type": "platos"
+  },
+  {
+    "name": "Bondiola Braseada",
+    "price": 21,
+    "ingredientes": ["bondiola", "vino blanco", "cebolla", "mostaza"],
+    "imageUrl": "https://images.unsplash.com/photo-1504674900247-0877df9cc836",
+    "description": "Bondiola cocida lentamente con mostaza.",
+    "stock": 13,
+    "category": "Carne",
+    "type": "platos"
+  },
+  {
+    "name": "Hamburguesa Completa",
+    "price": 16,
+    "ingredientes": ["carne", "queso", "lechuga", "tomate", "pan brioche"],
+    "imageUrl": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd",
+    "description": "Hamburguesa casera completa.",
+    "stock": 25,
+    "category": "Carne",
+    "type": "platos"
+  },
+  {
+    "name": "Matambre a la Pizza",
+    "price": 22,
+    "ingredientes": ["matambre", "salsa de tomate", "mozzarella", "orégano"],
+    "imageUrl": "https://images.unsplash.com/photo-1515003197210-e0cd71810b5f",
+    "description": "Matambre con mozzarella gratinada.",
+    "stock": 9,
+    "category": "Carne",
+    "type": "platos"
+  },
+  {
+    "name": "Atún Sellado",
+    "price": 22,
+    "ingredientes": ["atún", "sésamo", "soja", "jengibre"],
+    "imageUrl": "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2",
+    "description": "Atún sellado con costra de sésamo.",
+    "stock": 10,
+    "category": "Pescado",
+    "type": "platos"
+  },
+  {
+    "name": "Filet de Pescado",
+    "price": 18,
+    "ingredientes": ["filet", "ajo", "perejil", "limón"],
+    "imageUrl": "https://images.unsplash.com/photo-1559847844-5315695dadae",
+    "description": "Filet de pescado suave al limón.",
+    "stock": 19,
+    "category": "Pescado",
+    "type": "platos"
+  },
+  {
+    "name": "Corvina Grillada",
+    "price": 20,
+    "ingredientes": ["corvina", "aceite de oliva", "romero", "limón"],
+    "imageUrl": "https://images.unsplash.com/photo-1467003909585-2f8a72700288",
+    "description": "Corvina grillada con romero.",
+    "stock": 12,
+    "category": "Pescado",
+    "type": "platos"
+  },
+  {
+    "name": "Rabas Crocantes",
+    "price": 19,
+    "ingredientes": ["calamares", "harina", "limón", "alioli"],
+    "imageUrl": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38",
+    "description": "Rabas crocantes con alioli.",
+    "stock": 20,
+    "category": "Mariscos",
+    "type": "platos"
+  },
+  {
+    "name": "Mejillones al Vapor",
+    "price": 18,
+    "ingredientes": ["mejillones", "vino blanco", "ajo", "perejil"],
+    "imageUrl": "https://images.unsplash.com/photo-1559847844-5315695dadae",
+    "description": "Mejillones al vapor con ajo.",
+    "stock": 11,
+    "category": "Mariscos",
+    "type": "platos"
+  },
+  {
+    "name": "Suprema Napolitana",
+    "price": 19,
+    "ingredientes": ["pollo", "salsa de tomate", "queso", "orégano"],
+    "imageUrl": "https://images.unsplash.com/photo-1604908176997-4317b9e2b3d6",
+    "description": "Suprema con salsa y mozzarella.",
+    "stock": 18,
+    "category": "Pollo",
+    "type": "platos"
+  },
+  {
+    "name": "Brochettes de Pollo",
+    "price": 17,
+    "ingredientes": ["pollo", "pimientos", "cebolla", "aceite de oliva"],
+    "imageUrl": "https://images.unsplash.com/photo-1529193591184-b1d58069ecdd",
+    "description": "Brochettes de pollo grilladas.",
+    "stock": 14,
+    "category": "Pollo",
+    "type": "platos"
+  },
+  {
+    "name": "Morcilla a la Parrilla",
+    "price": 10,
+    "ingredientes": ["morcilla", "pan", "chimichurri"],
+    "imageUrl": "https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba",
+    "description": "Morcilla caliente con pan.",
+    "stock": 21,
+    "category": "Parrilla",
+    "type": "platos"
+  },
+  {
+    "name": "Parrillada para Compartir",
+    "price": 38,
+    "ingredientes": ["asado", "vacío", "chorizo", "morcilla", "pollo"],
+    "imageUrl": "https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba",
+    "description": "Parrillada completa para compartir.",
+    "stock": 8,
+    "category": "Parrilla",
+    "type": "platos"
+  },
+  {
+    "name": "Vino Tinto Malbec",
+    "price": 14,
+    "ingredientes": ["vino malbec"],
+    "imageUrl": "https://images.unsplash.com/photo-1510626176961-4b37d4fbad03",
+    "description": "Copa de vino Malbec argentino.",
+    "stock": 40,
+    "category": "Vinos",
+    "type": "bebidas"
+  },
+  {
+    "name": "Tapa de Asado",
+    "price": 23,
+    "ingredientes": ["tapa de asado", "sal gruesa", "papas"],
+    "imageUrl": "https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba",
+    "description": "Tapa de asado tierna con papas al horno.",
+    "stock": 12,
+    "category": "Carne",
+    "type": "platos"
+  },
+  {
+    "name": "Bife con Puré",
+    "price": 20,
+    "ingredientes": ["carne vacuna", "papas", "manteca"],
+    "imageUrl": "https://c.pxhere.com/photos/97/5d/pork_yummy_delicious_dinner_tasty_cuisine_grilled_meat-1386775.jpg!d",
+    "description": "Bife jugoso acompañado con puré cremoso.",
+    "stock": 16,
+    "category": "Carne",
+    "type": "platos"
+  },
+  {
+    "name": "Carré de Cerdo",
+    "price": 22,
+    "ingredientes": ["cerdo", "mostaza", "miel"],
+    "imageUrl": "https://images.unsplash.com/photo-1504674900247-0877df9cc836",
+    "description": "Carré de cerdo glaseado con miel y mostaza.",
+    "stock": 10,
+    "category": "Carne",
+    "type": "platos"
+  },
+  {
+    "name": "Albóndigas Caseras",
+    "price": 16,
+    "ingredientes": ["carne picada", "salsa de tomate", "ajo"],
+    "imageUrl": "https://images.unsplash.com/photo-1529042410759-befb1204b468",
+    "description": "Albóndigas caseras en salsa de tomate.",
+    "stock": 18,
+    "category": "Carne",
+    "type": "platos"
+  },
+  {
+    "name": "Estofado de Carne",
+    "price": 19,
+    "ingredientes": ["carne", "papas", "zanahoria"],
+    "imageUrl": "https://images.unsplash.com/photo-1544025162-d76694265947",
+    "description": "Estofado tradicional con verduras.",
+    "stock": 15,
+    "category": "Carne",
+    "type": "platos"
+  },
+  {
+    "name": "Lenguado al Limón",
+    "price": 21,
+    "ingredientes": ["lenguado", "limón", "manteca"],
+    "imageUrl": "https://images.unsplash.com/photo-1559847844-5315695dadae",
+    "description": "Lenguado suave con manteca de limón.",
+    "stock": 11,
+    "category": "Pescado",
+    "type": "platos"
+  },
+  {
+    "name": "Pescado Rebozado",
+    "price": 17,
+    "ingredientes": ["pescado", "harina", "huevo"],
+    "imageUrl": "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2",
+    "description": "Pescado crocante rebozado.",
+    "stock": 19,
+    "category": "Pescado",
+    "type": "platos"
+  },
+  {
+    "name": "Trucha con Papines",
+    "price": 22,
+    "ingredientes": ["trucha", "papines", "romero"],
+    "imageUrl": "https://images.unsplash.com/photo-1467003909585-2f8a72700288",
+    "description": "Trucha grillada con papines.",
+    "stock": 10,
+    "category": "Pescado",
+    "type": "platos"
+  },
+  {
+    "name": "Pulpo Grillado",
+    "price": 28,
+    "ingredientes": ["pulpo", "aceite de oliva", "pimentón"],
+    "imageUrl": "https://images.unsplash.com/photo-1625944525533-473f1c3d54e7",
+    "description": "Pulpo grillado con pimentón ahumado.",
+    "stock": 8,
+    "category": "Mariscos",
+    "type": "platos"
+  },
+  {
+    "name": "Tallarines con Mariscos",
+    "price": 24,
+    "ingredientes": ["tallarines", "langostinos", "calamares"],
+    "imageUrl": "https://images.unsplash.com/photo-1534080564583-6be75777b70a",
+    "description": "Pasta con mariscos frescos.",
+    "stock": 13,
+    "category": "Mariscos",
+    "type": "platos"
+  },
+  {
+    "name": "Pollo a la Mostaza",
+    "price": 18,
+    "ingredientes": ["pollo", "mostaza", "crema"],
+    "imageUrl": "https://images.unsplash.com/photo-1604908176997-4317b9e2b3d6",
+    "description": "Pollo en salsa cremosa de mostaza.",
+    "stock": 16,
+    "category": "Pollo",
+    "type": "platos"
+  },
+  {
+    "name": "Pollo Asado",
+    "price": 17,
+    "ingredientes": ["pollo", "ajo", "romero"],
+    "imageUrl": "https://images.unsplash.com/photo-1512058564366-c9e3e0467b3c",
+    "description": "Pollo asado con hierbas.",
+    "stock": 18,
+    "category": "Pollo",
+    "type": "platos"
+  },
+  {
+    "name": "Mollejas a la Parrilla",
+    "price": 15,
+    "ingredientes": ["mollejas", "limón", "sal"],
+    "imageUrl": "https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba",
+    "description": "Mollejas crocantes a la parrilla.",
+    "stock": 14,
+    "category": "Parrilla",
+    "type": "platos"
+  },
+  {
+    "name": "Tira de Costilla",
+    "price": 26,
+    "ingredientes": ["costilla", "sal gruesa"],
+    "imageUrl": "https://images.unsplash.com/photo-1544025162-d76694265947",
+    "description": "Costilla jugosa a la parrilla.",
+    "stock": 10,
+    "category": "Parrilla",
+    "type": "platos"
+  },
+  {
+    "name": "Agua con Gas",
+    "price": 4,
+    "ingredientes": ["agua mineral"],
+    "imageUrl": "https://images.unsplash.com/photo-1564419320461-6870880221ad",
+    "description": "Agua mineral con gas bien fría.",
+    "stock": 60,
+    "category": "Agua",
+    "type": "bebidas"
+  },
+  {
+    "name": "Bife a Caballo",
+    "price": 21,
+    "ingredientes": ["bife", "huevo frito", "papas fritas"],
+    "imageUrl": "https://images.unsplash.com/photo-1600891964092-4316c288032e",
+    "description": "Bife con huevo frito servido con papas.",
+    "stock": 14,
+    "category": "Carne",
+    "type": "platos"
+  },
+  {
+    "name": "Lasaña de Carne",
+    "price": 20,
+    "ingredientes": ["carne", "pasta", "salsa de tomate", "queso"],
+    "imageUrl": "https://images.unsplash.com/photo-1619895092538-128341789043",
+    "description": "Lasaña gratinada rellena con carne.",
+    "stock": 15,
+    "category": "Carne",
+    "type": "platos"
+  },
+  {
+    "name": "Carne al Vino",
+    "price": 23,
+    "ingredientes": ["carne vacuna", "vino tinto", "cebolla"],
+    "imageUrl": "https://images.unsplash.com/photo-1504674900247-0877df9cc836",
+    "description": "Carne tierna cocida en reducción de vino.",
+    "stock": 11,
+    "category": "Carne",
+    "type": "platos"
+  },
+  {
+    "name": "Hamburguesa Doble",
+    "price": 18,
+    "ingredientes": ["carne", "queso cheddar", "pan"],
+    "imageUrl": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd",
+    "description": "Hamburguesa doble con cheddar.",
+    "stock": 20,
+    "category": "Carne",
+    "type": "platos"
+  },
+  {
+    "name": "Tacos de Carne",
+    "price": 17,
+    "ingredientes": ["carne", "tortillas", "cebolla", "cilantro"],
+    "imageUrl": "https://images.unsplash.com/photo-1552332386-f8dd00dc2f85",
+    "description": "Tacos con carne sazonada.",
+    "stock": 22,
+    "category": "Carne",
+    "type": "platos"
+  },
+  {
+    "name": "Pescado a la Plancha",
+    "price": 18,
+    "ingredientes": ["pescado blanco", "aceite de oliva", "limón"],
+    "imageUrl": "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2",
+    "description": "Pescado fresco a la plancha.",
+    "stock": 17,
+    "category": "Pescado",
+    "type": "platos"
+  },
+  {
+    "name": "Salmón con Puré",
+    "price": 24,
+    "ingredientes": ["salmón", "papas", "manteca"],
+    "imageUrl": "https://images.unsplash.com/photo-1467003909585-2f8a72700288",
+    "description": "Salmón grillado con puré cremoso.",
+    "stock": 10,
+    "category": "Pescado",
+    "type": "platos"
+  },
+  {
+    "name": "Pescado en Salsa Blanca",
+    "price": 20,
+    "ingredientes": ["filet de pescado", "crema", "perejil"],
+    "imageUrl": "https://images.unsplash.com/photo-1559847844-5315695dadae",
+    "description": "Pescado servido con salsa blanca.",
+    "stock": 13,
+    "category": "Pescado",
+    "type": "platos"
+  },
+  {
+    "name": "Empanadas de Mariscos",
+    "price": 14,
+    "ingredientes": ["mariscos", "cebolla", "masa"],
+    "imageUrl": "https://images.unsplash.com/photo-1625944525533-473f1c3d54e7",
+    "description": "Empanadas rellenas de mariscos.",
+    "stock": 24,
+    "category": "Mariscos",
+    "type": "platos"
+  },
+  {
+    "name": "Risotto de Mariscos",
+    "price": 25,
+    "ingredientes": ["arroz arbóreo", "langostinos", "parmesano"],
+    "imageUrl": "https://images.unsplash.com/photo-1534080564583-6be75777b70a",
+    "description": "Risotto cremoso con mariscos.",
+    "stock": 11,
+    "category": "Mariscos",
+    "type": "platos"
+  },
+  {
+    "name": "Pollo al Verdeo",
+    "price": 18,
+    "ingredientes": ["pollo", "verdeo", "crema"],
+    "imageUrl": "https://images.unsplash.com/photo-1604908177522-040c0c9b61a7",
+    "description": "Pollo en salsa cremosa de verdeo.",
+    "stock": 17,
+    "category": "Pollo",
+    "type": "platos"
+  },
+  {
+    "name": "Wrap de Pollo",
+    "price": 15,
+    "ingredientes": ["pollo", "tortilla", "lechuga"],
+    "imageUrl": "https://images.unsplash.com/photo-1530469912745-a215c6b256ea",
+    "description": "Wrap fresco de pollo con vegetales.",
+    "stock": 19,
+    "category": "Pollo",
+    "type": "platos"
+  },
+  {
+    "name": "Parrillada Mixta",
+    "price": 34,
+    "ingredientes": ["asado", "chorizo", "morcilla"],
+    "imageUrl": "https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba",
+    "description": "Parrillada surtida para compartir.",
+    "stock": 9,
+    "category": "Parrilla",
+    "type": "platos"
+  },
+  {
+    "name": "Provoleta Rellena",
+    "price": 14,
+    "ingredientes": ["provolone", "jamón", "tomate seco"],
+    "imageUrl": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c",
+    "description": "Provoleta rellena y gratinada.",
+    "stock": 12,
+    "category": "Parrilla",
+    "type": "platos"
+  },
+  {
+    "name": "Coca-Cola",
+    "price": 5,
+    "ingredientes": ["gaseosa cola"],
+    "imageUrl": "https://images.unsplash.com/photo-1629203851122-3726ecdf080e",
+    "description": "Gaseosa cola servida fría.",
+    "stock": 70,
+    "category": "Gaseosas",
+    "type": "bebidas"
+  },
+  {
+    "name": "Lomo con Papas",
+    "price": 24,
+    "ingredientes": ["lomo", "papas fritas", "sal"],
+    "imageUrl": "https://images.unsplash.com/photo-1546833999-b9f581a1996d",
+    "description": "Lomo tierno acompañado con papas fritas.",
+    "stock": 13,
+    "category": "Carne",
+    "type": "platos"
+  },
+  {
+    "name": "Carpaccio de Carne",
+    "price": 19,
+    "ingredientes": ["carne", "parmesano", "rúcula"],
+    "imageUrl": "https://images.unsplash.com/photo-1544025162-d76694265947",
+    "description": "Finas láminas de carne con rúcula.",
+    "stock": 10,
+    "category": "Carne",
+    "type": "platos"
+  },
+  {
+    "name": "Matambrito Tiernizado",
+    "price": 22,
+    "ingredientes": ["matambre", "limón", "ajo"],
+    "imageUrl": "https://images.unsplash.com/photo-1504674900247-0877df9cc836",
+    "description": "Matambrito tierno con papas.",
+    "stock": 12,
+    "category": "Carne",
+    "type": "platos"
+  },
+  {
+    "name": "Carne al Curry",
+    "price": 20,
+    "ingredientes": ["carne", "curry", "crema"],
+    "imageUrl": "https://images.unsplash.com/photo-1529042410759-befb1204b468",
+    "description": "Carne en salsa especiada de curry.",
+    "stock": 14,
+    "category": "Carne",
+    "type": "platos"
+  },
+  {
+    "name": "Bowl de Carne",
+    "price": 18,
+    "ingredientes": ["carne", "arroz", "palta"],
+    "imageUrl": "https://images.unsplash.com/photo-1515003197210-e0cd71810b5f",
+    "description": "Bowl con carne grillada y vegetales.",
+    "stock": 18,
+    "category": "Carne",
+    "type": "platos"
+  },
+  {
+    "name": "Salmón Ahumado",
+    "price": 23,
+    "ingredientes": ["salmón", "limón"],
+    "imageUrl": "https://images.unsplash.com/photo-1467003909585-2f8a72700288",
+    "description": "Salmón ahumado con notas frescas.",
+    "stock": 9,
+    "category": "Pescado",
+    "type": "platos"
+  },
+  {
+    "name": "Pescado Mediterráneo",
+    "price": 21,
+    "ingredientes": ["pescado", "aceitunas", "tomate"],
+    "imageUrl": "https://images.unsplash.com/photo-1559847844-5315695dadae",
+    "description": "Pescado con vegetales mediterráneos.",
+    "stock": 12,
+    "category": "Pescado",
+    "type": "platos"
+  },
+  {
+    "name": "Merluza con Puré",
+    "price": 18,
+    "ingredientes": ["merluza", "ensalada"],
+    "imageUrl": "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2",
+    "description": "Merluza con ensalada.",
+    "stock": 17,
+    "category": "Pescado",
+    "type": "platos"
+  },
+  {
+    "name": "Langostinos Rebozados",
+    "price": 22,
+    "ingredientes": ["langostinos", "harina", "alioli"],
+    "imageUrl": "https://images.unsplash.com/photo-1625944525533-473f1c3d54e7",
+    "description": "Langostinos crocantes con alioli.",
+    "stock": 13,
+    "category": "Mariscos",
+    "type": "platos"
+  },
+  {
+    "name": "Pasta Frutti di Mare",
+    "price": 24,
+    "ingredientes": ["pasta", "mejillones", "langostinos"],
+    "imageUrl": "https://images.unsplash.com/photo-1534080564583-6be75777b70a",
+    "description": "Pasta con mariscos frescos.",
+    "stock": 10,
+    "category": "Mariscos",
+    "type": "platos"
+  },
+  {
+    "name": "Pollo con Arroz",
+    "price": 16,
+    "ingredientes": ["pollo", "arroz", "cebolla"],
+    "imageUrl": "https://images.unsplash.com/photo-1512058564366-c9e3e0467b3c",
+    "description": "Pollo salteado con arroz.",
+    "stock": 20,
+    "category": "Pollo",
+    "type": "platos"
+  },
+  {
+    "name": "Milanesa de Pollo",
+    "price": 17,
+    "ingredientes": ["pollo", "pan rallado"],
+    "imageUrl": "https://images.unsplash.com/photo-1604908176997-4317b9e2b3d6",
+    "description": "Milanesa crocante con papas.",
+    "stock": 21,
+    "category": "Pollo",
+    "type": "platos"
+  },
+  {
+    "name": "Chinchulines",
+    "price": 13,
+    "ingredientes": ["chinchulines", "limón"],
+    "imageUrl": "https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba",
+    "description": "Chinchulines dorados a la parrilla.",
+    "stock": 15,
+    "category": "Parrilla",
+    "type": "platos"
+  },
+  {
+    "name": "Asado Banderita",
+    "price": 25,
+    "ingredientes": ["asado", "sal gruesa"],
+    "imageUrl": "https://images.unsplash.com/photo-1544025162-d76694265947",
+    "description": "Asado a las brasas.",
+    "stock": 10,
+    "category": "Parrilla",
+    "type": "platos"
+  },
+  {
+    "name": "Sprite",
+    "price": 5,
+    "ingredientes": ["gaseosa lima limón"],
+    "imageUrl": "https://images.unsplash.com/photo-1624517452488-04869289c4ca",
+    "description": "Gaseosa lima-limón fría.",
+    "stock": 65,
+    "category": "Gaseosas",
+    "type": "bebidas"
+  },
+  {
+    "name": "Carne con Vegetales",
+    "price": 19,
+    "ingredientes": ["carne", "brócoli", "zanahoria"],
+    "imageUrl": "https://images.unsplash.com/photo-1529042410759-befb1204b468",
+    "description": "Salteado de carne con vegetales.",
+    "stock": 16,
+    "category": "Carne",
+    "type": "platos"
+  },
+  {
+    "name": "Bife Criollo",
+    "price": 22,
+    "ingredientes": ["bife", "cebolla", "morrón"],
+    "imageUrl": "https://images.unsplash.com/photo-1546833999-b9f581a1996d",
+    "description": "Bife con vegetales salteados.",
+    "stock": 13,
+    "category": "Carne",
+    "type": "platos"
+  },
+  {
+    "name": "Empanadas de Carne",
+    "price": 12,
+    "ingredientes": ["carne", "cebolla", "aceitunas"],
+    "imageUrl": "https://images.unsplash.com/photo-1552332386-f8dd00dc2f85",
+    "description": "Empanadas tradicionales.",
+    "stock": 30,
+    "category": "Carne",
+    "type": "platos"
+  },
+  {
+    "name": "Ravioles de Carne",
+    "price": 18,
+    "ingredientes": ["pasta", "carne", "salsa"],
+    "imageUrl": "https://images.unsplash.com/photo-1619895092538-128341789043",
+    "description": "Ravioles con salsa de carne.",
+    "stock": 14,
+    "category": "Carne",
+    "type": "platos"
+  },
+  {
+    "name": "Carne Mechada",
+    "price": 21,
+    "ingredientes": ["carne desmenuzada", "especias"],
+    "imageUrl": "https://images.unsplash.com/photo-1504674900247-0877df9cc836",
+    "description": "Carne cocida lentamente.",
+    "stock": 11,
+    "category": "Carne",
+    "type": "platos"
+  },
+  {
+    "name": "Pescado al Ajillo",
+    "price": 20,
+    "ingredientes": ["pescado", "ajo", "perejil"],
+    "imageUrl": "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2",
+    "description": "Pescado salteado con ajo.",
+    "stock": 12,
+    "category": "Pescado",
+    "type": "platos"
+  },
+  {
+    "name": "Filet con Ensalada",
+    "price": 17,
+    "ingredientes": ["filet", "lechuga", "tomate"],
+    "imageUrl": "https://images.unsplash.com/photo-1559847844-5315695dadae",
+    "description": "Filet con ensalada fresca.",
+    "stock": 16,
+    "category": "Pescado",
+    "type": "platos"
+  },
+  {
+    "name": "Salmón con Vegetales",
+    "price": 24,
+    "ingredientes": ["salmón", "brócoli"],
+    "imageUrl": "https://images.unsplash.com/photo-1467003909585-2f8a72700288",
+    "description": "Salmón saludable.",
+    "stock": 10,
+    "category": "Pescado",
+    "type": "platos"
+  },
+  {
+    "name": "Tostadas con Camarones",
+    "price": 18,
+    "ingredientes": ["camarones", "pan"],
+    "imageUrl": "https://images.unsplash.com/photo-1625944525533-473f1c3d54e7",
+    "description": "Tostadas con camarones.",
+    "stock": 15,
+    "category": "Mariscos",
+    "type": "platos"
+  },
+  {
+    "name": "Mariscos Gratinados",
+    "price": 26,
+    "ingredientes": ["mariscos", "queso"],
+    "imageUrl": "https://images.unsplash.com/photo-1534080564583-6be75777b70a",
+    "description": "Mix de mariscos gratinados.",
+    "stock": 9,
+    "category": "Mariscos",
+    "type": "platos"
+  },
+  {
+    "name": "Pollo Teriyaki",
+    "price": 18,
+    "ingredientes": ["pollo", "teriyaki"],
+    "imageUrl": "https://images.unsplash.com/photo-1604908177522-040c0c9b61a7",
+    "description": "Pollo con salsa teriyaki.",
+    "stock": 17,
+    "category": "Pollo",
+    "type": "platos"
+  },
+  {
+    "name": "Pollo con Puré",
+    "price": 16,
+    "ingredientes": ["pollo", "puré"],
+    "imageUrl": "https://images.unsplash.com/photo-1512058564366-c9e3e0467b3c",
+    "description": "Pollo con puré casero.",
+    "stock": 20,
+    "category": "Pollo",
+    "type": "platos"
+  },
+  {
+    "name": "Riñones Parrilla",
+    "price": 12,
+    "ingredientes": ["riñones"],
+    "imageUrl": "https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba",
+    "description": "Riñones a la parrilla.",
+    "stock": 13,
+    "category": "Parrilla",
+    "type": "platos"
+  },
+  {
+    "name": "Pechito Cerdo BBQ",
+    "price": 24,
+    "ingredientes": ["cerdo", "bbq"],
+    "imageUrl": "https://images.unsplash.com/photo-1544025162-d76694265947",
+    "description": "Cerdo con salsa BBQ.",
+    "stock": 11,
+    "category": "Parrilla",
+    "type": "platos"
+  },
+  {
+    "name": "Jugo de Naranja",
+    "price": 6,
+    "ingredientes": ["naranja"],
+    "imageUrl": "https://images.unsplash.com/photo-1600271886742-f049cd451bba",
+    "description": "Jugo natural de naranja.",
+    "stock": 45,
+    "category": "Jugos",
+    "type": "bebidas"
+  },
+  {
+    "name": "Medallón de Carne",
+    "price": 20,
+    "ingredientes": ["carne", "papas"],
+    "imageUrl": "https://images.unsplash.com/photo-1546833999-b9f581a1996d",
+    "description": "Medallón con papas.",
+    "stock": 14,
+    "category": "Carne",
+    "type": "platos"
+  },
+  {
+    "name": "Carne con Hongos",
+    "price": 22,
+    "ingredientes": ["carne", "hongos"],
+    "imageUrl": "https://images.unsplash.com/photo-1529042410759-befb1204b468",
+    "description": "Carne en salsa de hongos.",
+    "stock": 12,
+    "category": "Carne",
+    "type": "platos"
+  },
+  {
+    "name": "Ñoquis con Carne",
+    "price": 18,
+    "ingredientes": ["ñoquis", "carne"],
+    "imageUrl": "https://images.unsplash.com/photo-1619895092538-128341789043",
+    "description": "Ñoquis con salsa de carne.",
+    "stock": 16,
+    "category": "Carne",
+    "type": "platos"
+  },
+  {
+    "name": "Carne a la Cacerola",
+    "price": 21,
+    "ingredientes": ["carne", "cebolla"],
+    "imageUrl": "https://images.unsplash.com/photo-1504674900247-0877df9cc836",
+    "description": "Carne cocida lentamente.",
+    "stock": 10,
+    "category": "Carne",
+    "type": "platos"
+  },
+  {
+    "name": "Milanesa Fugazzeta",
+    "price": 19,
+    "ingredientes": ["carne", "queso", "cebolla"],
+    "imageUrl": "https://images.unsplash.com/photo-1512152272829-e3139592d56f",
+    "description": "Milanesa con queso y cebolla.",
+    "stock": 15,
+    "category": "Carne",
+    "type": "platos"
+  },
+  {
+    "name": "Pescado con Papas",
+    "price": 18,
+    "ingredientes": ["pescado", "papas"],
+    "imageUrl": "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2",
+    "description": "Pescado con papas al horno.",
+    "stock": 17,
+    "category": "Pescado",
+    "type": "platos"
+  },
+  {
+    "name": "Merluza Mediterránea",
+    "price": 20,
+    "ingredientes": ["merluza", "aceitunas"],
+    "imageUrl": "https://images.unsplash.com/photo-1559847844-5315695dadae",
+    "description": "Merluza con vegetales.",
+    "stock": 11,
+    "category": "Pescado",
+    "type": "platos"
+  },
+  {
+    "name": "Pescado al Curry",
+    "price": 21,
+    "ingredientes": ["pescado", "curry"],
+    "imageUrl": "https://images.unsplash.com/photo-1467003909585-2f8a72700288",
+    "description": "Pescado con salsa curry.",
+    "stock": 10,
+    "category": "Pescado",
+    "type": "platos"
+  },
+  {
+    "name": "Brochette de Langostinos",
+    "price": 23,
+    "ingredientes": ["langostinos", "pimientos"],
+    "imageUrl": "https://images.unsplash.com/photo-1625944525533-473f1c3d54e7",
+    "description": "Langostinos grillados.",
+    "stock": 12,
+    "category": "Mariscos",
+    "type": "platos"
+  },
+  {
+    "name": "Pizza de Mariscos",
+    "price": 24,
+    "ingredientes": ["masa", "mariscos"],
+    "imageUrl": "https://images.unsplash.com/photo-1534080564583-6be75777b70a",
+    "description": "Pizza con mariscos.",
+    "stock": 9,
+    "category": "Mariscos",
+    "type": "platos"
+  },
+  {
+    "name": "Pechuga Rellena",
+    "price": 19,
+    "ingredientes": ["pollo", "jamón", "queso"],
+    "imageUrl": "https://images.unsplash.com/photo-1604908176997-4317b9e2b3d6",
+    "description": "Pechuga rellena.",
+    "stock": 14,
+    "category": "Pollo",
+    "type": "platos"
+  },
+  {
+    "name": "Pollo al Horno",
+    "price": 17,
+    "ingredientes": ["pollo", "romero"],
+    "imageUrl": "https://images.unsplash.com/photo-1512058564366-c9e3e0467b3c",
+    "description": "Pollo al horno con papas.",
+    "stock": 18,
+    "category": "Pollo",
+    "type": "platos"
+  },
+  {
+    "name": "Asado Completo",
+    "price": 36,
+    "ingredientes": ["asado", "vacío", "chorizo"],
+    "imageUrl": "https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba",
+    "description": "Gran parrillada completa.",
+    "stock": 7,
+    "category": "Parrilla",
+    "type": "platos"
+  },
+  {
+    "name": "Vegetales Parrilla",
+    "price": 12,
+    "ingredientes": ["berenjena", "zucchini"],
+    "imageUrl": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c",
+    "description": "Vegetales grillados.",
+    "stock": 20,
+    "category": "Parrilla",
+    "type": "platos"
+  },
+  {
+    "name": "Cerveza Artesanal",
+    "price": 8,
+    "ingredientes": ["cerveza"],
+    "imageUrl": "https://images.unsplash.com/photo-1516458464372-ee7eae24bce6",
+    "description": "Cerveza artesanal fría.",
+    "stock": 35,
+    "category": "Cervezas",
+    "type": "bebidas"
+  },
+  {
+    "name":  "Fanta",
+    "price": 5,
+    "ingredientes": ["gaseosa de naranja"],
+    "imageUrl": "https://laesquinadetandil.com.ar/wp-content/uploads/2024/11/fanta-naranja-1-5lts.png" ,
+    "description": "Gaseosa Fanta servida fria",
     "stock": 50,
-    "category": "Carne"
-    },
-
-    {
-    "name": "Paella",
-    "price": 15999,
-    "ingredientes": "la base de arroz, el sofrito, el caldo y la selección de frutos del mar",
-    "description": "Una selección de los mejores tesoros del océano, desde langostinos carnosos hasta calamares tiernos y mejillones vibrantes. Salteados al ajillo, grillados al fuego o servidos al natural, ofrecen una explosión de sabor mineral y texturas delicadas que evocan la brisa marina en cada bocado.",
-    "imageUrl":
-      "https://centrosantafe.com.mx/cdn/shop/articles/restaurantes-de-mariscos-y-otras-opciones-para-comer-en-cuaresma.jpg?v=1552671997",
-    "stock": 50,
-    "category": "Mariscos"
-    },
-
-    {
-    "name": "Pescado a la plancha",
-    "price": 15999,
-    "ingredientes": "Pescado, aceite",
-    "description": "Un filete seleccionado, sellado a alta temperatura para lograr una piel dorada y crocante, mientras el interior se mantiene tierno, blanco y rebosante de jugos naturales. Realzado con un toque de aceite de oliva virgen, cristales de sal y finas hierbas que respetan la pureza del sabor marino.",
-    "imageUrl":
-      "https://media.istockphoto.com/id/1457695408/photo/baked-salmon-and-lemon-on-black-background.jpg?s=612x612&w=0&k=20&c=AayKw6bG1syNnZigm46al47UkiXVD5Mw_PD1eN-5KJk=",
-    "stock": 50,
-    "category": "Pescado"
-    },
-
-    {
-    "name": "Merluza a la italiana",
-    "price": 15999,
-    "ingredientes": "Merluza, salsa pomodora, tomate, aceitunas negras, ajo, alcaparras.",
-    "description": "Filetes de merluza tiernos, cocinados lentamente en una vibrante salsa pomodoro artesanal. El dulzor del tomate, la intensidad de las aceitunas negras, el toque ácido de las alcaparras y el perfume del ajo y la albahaca fresca se funden para realzar la delicadeza del pescado, creando una experiencia equilibrada y llena de carácter.",
-    "imageUrl":
-      "https://media.istockphoto.com/id/1216654222/photo/close-up-grilled-salmon-steak-with-creamy-pumpkin-puree-fried-cherry-tomatoes-and-thyme-lunch.jpg?s=612x612&w=0&k=20&c=RMVwaJYGpFjkITS2aL2cIHwRd1u1n-aCzUgRtlUAOoA=",
-    "stock": 50,
-    "category": "Pescado"
-    },
-
-    {
-    "name": "Pastas caseras",
-    "price": 15999,
-    "ingredientes": "Harina, huevo.",
-    "description": "El arte de la harina y el huevo transformado en cintas de seda o pañuelos rellenos. Cada pieza es elaborada desde cero, estirada con cuidado y cocida al punto al dente justo. Una textura porosa y firme que atrapa las salsas de manera perfecta, ofreciendo un bocado elástico, tierno y con el auténtico sabor del hogar.",
-    "imageUrl":
-      "https://media.istockphoto.com/id/488960908/es/foto/pastas-caseras-casera.jpg?s=612x612&w=0&k=20&c=88BvEMlmHMPNerXwMO72GGqD2N7fVnj81nKH-ayQaMA=",
-    "stock": 50,
-    "category": "Pastas"
-    },
-
-    {
-    "name": "Filete de carne Angus",
-    "price": 15999,
-    "ingredientes": " Carne Angus.",
-    "description": "La máxima expresión de la carne vacuna. Este filete destaca por su extraordinario marmoleo —pequeñas vetas de grasa intramuscular— que se funden durante la cocción, bañando la carne en sus propios jugos. El resultado es una pieza de una suavidad extrema, con un sabor robusto y una textura mantecosa que redefine lo que significa un buen corte a la parrilla.",
-    "imageUrl":
-      "https://media.istockphoto.com/id/1176929739/es/foto/plato-de-restaurante-de-filete-de-carne-angus-negra-con-patatas-calientes-en-salsa-de-queso-y.jpg?s=612x612&w=0&k=20&c=XE-kOz66czbr2QwWwfuPcmRJQu4mF_gA6WkecdeAG2A=",
-    "stock": 50,
-    "category": "Parrilla"
-    },
-
-    {
-    "name": "Pata de pato confitada",
-    "price": 15999,
-    "ingredientes": " Pato.",
-    "description": "Una pieza de autor cocinada lentamente en su propia grasa a baja temperatura durante horas, logrando una carne tan tierna que se desprende del hueso con solo tocarla. El toque final de un golpe de calor intenso crea una piel dorada y extremadamente crocante, ofreciendo un contraste sublime entre la untuosidad del interior y el ´crunch´ exterior.",
-    "imageUrl":
-      "https://media.istockphoto.com/id/1150368715/es/foto/pata-de-pato-confit.jpg?s=612x612&w=0&k=20&c=OQ8Hd3kKRwNfL7LgsuShDbpw2WU89M5gmDyYB9LS0II=",
-    "stock": 50,
-    "category": "Confit"
-    },
-
-    {
-    "name": "Costillas de cerdo a la parrilla",
-    "price": 15999,
-    "ingredientes": "Costillas de cerdo, Salsa a la parrilla, Humo.",
-    "description": "Tiernas costillas seleccionadas, asadas lentamente a la parrilla para lograr una carne jugosa que se desprende fácilmente del hueso. Con un exterior perfectamente dorado y ese ahumado natural del carbón, cada bocado resalta el sabor dulce y suave característico del cerdo, realzado con un toque de sal entrefina o un glaseado artesanal.",
-    "imageUrl":
-      "https://media.istockphoto.com/id/1191425335/es/foto/concepto-de-comida-americana-costillas-de-cerdo-a-la-brasa-con-salsa-a-la-parrilla-con-humo.jpg?s=612x612&w=0&k=20&c=8YbggTOTSVBW0VbqhYElX8NJtjEuW-HdVgB_pedGLSw=",
-    "stock": 50,
-    "category": "Parrilla"
-    }
+    "category":  "Gaseosas",
+    "type":  "bebidas"
+  },
+  {
+    "name": "Coca-Cola Zero" ,
+    "price": 10,
+    "ingredientes":  ["gaseosa cola zero"],
+    "imageUrl": "https://sakoteacasa.com.ar/wp-content/uploads/2018/05/37095.jpg",
+    "description": "Gaseosa cola zero servida fría.",
+    "stock": 70,
+    "category":  "Gaseosas",
+    "type": "bebidas" 
+  },
+  {
+    "name": "Coca-Cola Light" ,
+    "price": 8,
+    "ingredientes": ["gaseosa cola light"],
+    "imageUrl": "https://static.wixstatic.com/media/d2b1c5_97cfcd285cde491db77c73a525e705e9~mv2.jpg/v1/fit/w_500,h_500,q_90/file.jpg",
+    "description": "Gaseosa cola light servida fría.",
+    "stock": 70,
+    "category": "Gaseosas",
+    "type": "bebidas"
+  },
+  {
+    "name": "Pepsi" ,
+    "price":  4,
+    "ingredientes": ["gaseosa pepsi"],
+    "imageUrl": "https://loquiero.ar/wp-content/uploads/2021/04/Pepsi-15L.jpg",
+    "description": "Gaseosa pepsi servida fría.",
+    "stock": 40,
+    "category": "Gaseosas",
+    "type": "bebidas" 
+  },
+  {
+    "name": "Cosecha Tardia" ,
+    "price": 16,
+    "ingredientes": ["vino blanco"],
+    "imageUrl": "https://shop.norton.com.ar/cdn/shop/files/Cosecha_tardia_blanco_-_nueva_etiqueta_1000x.png?v=1743015304",
+    "description": "Copa de vino blanco dulce.",
+    "stock":  30,
+    "category": "Vinos",
+    "type": "bebidas"
+  },
+  {
+    "name": "Agua Mineal Glaciar" ,
+    "price":  3,
+    "ingredientes":  ["agua mineral"],
+    "imageUrl":  "https://cdn.pedix.app/GfKrglnWulbY0CFXrezc/products/TOYYRTJiGxAWE9lUsj0y8.png?size=1600x1600",
+    "description":  "Agua mineral bien fría.",
+    "stock": 80,
+    "category": "Agua",
+    "type": "bebidas"
+  },
+  {
+    "name": "Agua Mineal Villavicencio",
+    "price":  3,
+    "ingredientes": ["agua mineral"],
+    "imageUrl": "https://thefoodmarketar.vtexassets.com/arquivos/ids/155612-800-450?v=637823425213870000&width=800&height=450&aspect=true",
+    "description": "Agua mineral bien fría.",
+    "stock": 80,
+    "category": "Agua",
+    "type": "bebidas"
+  },
+  {
+    "name": "Vino Blanco Lopez" ,
+    "price": 18,
+    "ingredientes": ["vino blanco"],
+    "imageUrl": "https://jumboargentina.vtexassets.com/arquivos/ids/624945/Vino-Bco-L-pez-Dulce-Natural-1-859146.jpg?v=637514623087900000",
+    "description": "Copa de vino blanco dulce natural.",
+    "stock":  30,
+    "category": "Vinos",
+    "type": "bebidas"
+  },
+  {
+    "name": "Vino Tinto Don Valentin",
+    "price": 15,
+    "ingredientes": ["vino Don Valentin"],
+    "imageUrl": "https://www.lacoopeencasa.coop/media/lcec/publico/articulos/0/9/1/091e7bdfcbb3ec3aa844936e505a1135",
+    "description": "Copa de vino Don Valentin.",
+    "stock": 40,
+    "category": "Vinos",
+    "type": "bebidas"
+  }
 ]

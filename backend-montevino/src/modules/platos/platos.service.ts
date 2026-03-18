@@ -4,8 +4,9 @@ import data from 'data.json';
 import { Repository } from 'typeorm';
 import { Platos } from './entities/platos.entity';
 import { Category } from '../categories/entities/category.entity';
-import { CreatePlatosDto } from './dto/create-platos.dto';
+import { CreatePlatosDto, TipoProducto } from './dto/create-platos.dto';
 import { UpdatePlatosDto } from './dto/update-platos.dto';
+import { FileUploadRepository } from 'src/file-upload/file-upload.repository';
 
 @Injectable()
 export class PlatosService {
@@ -14,61 +15,86 @@ export class PlatosService {
     private readonly platosRepository: Repository<Platos>,
     @InjectRepository(Category)
     private readonly categoriesRepository: Repository<Category>,
+    private readonly fileUploadRepository: FileUploadRepository,
   ) {}
 
   async seeder() {
-    const categories = await this.categoriesRepository.find();
+  const categories = await this.categoriesRepository.find();
+  const platosExistentes = await this.platosRepository.find();
 
-    const platosToSeed = (data as any[])
-      .map((item) => {
-        const category = categories.find((cat) => cat.name === item.category);
+  for (const item of data as any[]) {
+    const yaExiste = platosExistentes.find(p => p.name === item.name);
+    if (yaExiste) continue;
 
-        if (!category) {
-          console.warn(
-            `Categoría "${item.category}" no encontrada para el plato "${item.name}"`,
-          );
-          return null;
-        }
+    const category = categories.find((cat) => cat.name === item.category);
+    if (!category) continue;
 
-        return {
-          name: item.name,
-          price: item.price,
-          ingredientes: Array.isArray(item.ingredientes)
-            ? item.ingredientes.join(', ')
-            : item.ingredientes,
-          description: item.description,
-          imageUrl: item.imageUrl,
-          stock: item.stock,
-          category: category,
-        };
-      })
-      .filter((plato) => plato !== null);
-
-    await this.platosRepository.upsert(platosToSeed, ['name']);
-
-    return 'Platos Added';
-  }
-
-  async create(createPlatoDto: CreatePlatosDto) {
-    const category = await this.categoriesRepository.findOneBy({
-      id: createPlatoDto.categoryId,
-    });
-
-    if (!category) {
-      throw new NotFoundException('Categoría no encontrada');
+    let finalImageUrl = item.imageUrl;
+    try {
+      const upload = await this.fileUploadRepository.uploadImageFromUrl(item.imageUrl);
+      finalImageUrl = upload.secure_url;
+      console.log(`Imagen subida para: ${item.name}`);
+    } catch (error) {
+      console.error(`Error subiendo imagen de ${item.name}, usando original.`);
     }
 
-    const newPlato = this.platosRepository.create({
-      ...createPlatoDto,
+    const nuevoPlato = this.platosRepository.create({
+      name: item.name,
+      price: item.price,
+      ingredientes: Array.isArray(item.ingredientes) ? item.ingredientes.join(', ') : item.ingredientes,
+      description: item.description,
+      imageUrl: finalImageUrl,
+      stock: item.stock,
       category: category,
+      type: item.type,
     });
+
+    await this.platosRepository.save(nuevoPlato);
+    await new Promise(resolve => setTimeout(resolve, 300));
+  }
+
+  return 'Platos Added with Cloudinary Images';
+}
+
+ async create(createPlatoDto: CreatePlatosDto) {
+  const category = await this.categoriesRepository.findOneBy({ 
+    id: createPlatoDto.categoryId 
+  });
 
     return await this.platosRepository.save(newPlato);
   }
 
-  async getPlatos(page: number, limit: number) {
+  let finalImageUrl = createPlatoDto.imageUrl;
+
+  if (finalImageUrl && !finalImageUrl.includes('cloudinary.com')) {
+    try {
+      console.log(`Subiendo nueva imagen a Cloudinary para el plato: ${createPlatoDto.name}`);
+      const upload = await this.fileUploadRepository.uploadImageFromUrl(finalImageUrl);
+      finalImageUrl = upload.secure_url;
+    } catch (error) {
+      console.error('Error al subir imagen en create, se usará la URL original:', error.message);
+    }
+  }
+
+  const newPlato = this.platosRepository.create({
+    ...createPlatoDto,
+    imageUrl: finalImageUrl,
+    category: category 
+  });
+  
+  return await this.platosRepository.save(newPlato);
+}
+
+  async getPlatos(page: number, limit: number, type?: TipoProducto, category?: string) {
+    const where: any = {};
+
+    if (type) where.type = type;
+
+    if (category) where.category = { name: category };
+
     return await this.platosRepository.find({
       relations: { category: true },
+      where: where,
       skip: (page - 1) * limit,
       take: limit,
     });
