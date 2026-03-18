@@ -61,8 +61,7 @@ export class PlatosService {
     id: createPlatoDto.categoryId 
   });
 
-  if (!category) {
-    throw new NotFoundException('Categoría no encontrada');
+    return await this.platosRepository.save(newPlato);
   }
 
   let finalImageUrl = createPlatoDto.imageUrl;
@@ -102,42 +101,41 @@ export class PlatosService {
   }
 
   findOne(id: string) {
-  return this.platosRepository.findOneBy({ id });
+    return this.platosRepository.findOneBy({ id });
   }
 
   async update(id: string, updatePlatosDto: UpdatePlatosDto) {
-  const plato = await this.platosRepository.preload({
-    id: id,
-    ...updatePlatosDto,
-  });
-
-  if (!plato) {
-    throw new NotFoundException(`El plato con ID ${id} no fue encontrado`);
-  }
-
-  if (updatePlatosDto.categoryId) {
-    const category = await this.categoriesRepository.findOneBy({ 
-      id: updatePlatosDto.categoryId 
+    const plato = await this.platosRepository.preload({
+      id: id,
+      ...updatePlatosDto,
     });
-    
-    if (!category) {
-      throw new NotFoundException('La nueva categoría no existe');
+
+    if (!plato) {
+      throw new NotFoundException(`El plato con ID ${id} no fue encontrado`);
     }
-    plato.category = category;
+
+    if (updatePlatosDto.categoryId) {
+      const category = await this.categoriesRepository.findOneBy({
+        id: updatePlatosDto.categoryId,
+      });
+
+      if (!category) {
+        throw new NotFoundException('La nueva categoría no existe');
+      }
+      plato.category = category;
+    }
+
+    return await this.platosRepository.save(plato);
   }
 
-  return await this.platosRepository.save(plato);
-}
+  async remove(id: string) {
+    const plato = await this.findOne(id);
 
-async remove(id: string) {
-  const plato = await this.findOne(id); 
-  
-  if (!plato) {
-    throw new NotFoundException(`El plato con ID ${id} no existe`);
+    if (!plato) {
+      throw new NotFoundException(`El plato con ID ${id} no existe`);
+    }
+
+    await this.platosRepository.remove(plato);
+    return { message: `Plato '${plato.name}' eliminado correctamente` };
   }
-
-  await this.platosRepository.remove(plato);
-  return { message: `Plato '${plato.name}' eliminado correctamente` };
-}
-
 }

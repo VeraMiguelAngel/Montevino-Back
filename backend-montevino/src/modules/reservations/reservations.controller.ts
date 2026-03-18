@@ -1,45 +1,51 @@
 import {
+  Body,
   Controller,
   Get,
-  Post,
-  Body,
-  Patch,
   Param,
-  Delete,
+  Patch,
+  Post,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { ReservationsService } from './reservations.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
-import { UpdateReservationDto } from './dto/update-reservation.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth-guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { Roles } from 'src/decorators/roles.decorator';
+import { usersRole } from '../users/users-role.enum';
+import { RolesGuard } from '../auth/guards/roles.guard';
 
 @Controller('reservations')
 export class ReservationsController {
   constructor(private readonly reservationsService: ReservationsService) {}
 
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() createReservationDto: CreateReservationDto) {
-    return this.reservationsService.create(createReservationDto);
+  create(@Body() createReservationDto: CreateReservationDto, @Req() req) {
+    return this.reservationsService.create(createReservationDto, req.user);
   }
 
+  @ApiBearerAuth()
+  @Roles(usersRole.ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get()
   findAll() {
     return this.reservationsService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.reservationsService.findOne(+id);
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Get('myreservations')
+  getMyReservations(@Req() req) {
+    return this.reservationsService.findByUser(req.user.id);
   }
 
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateReservationDto: UpdateReservationDto,
-  ) {
-    return this.reservationsService.update(+id, updateReservationDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.reservationsService.remove(+id);
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Patch(':id/cancel')
+  cancelReservation(@Param('id') id: string, @Req() req) {
+    return this.reservationsService.cancel(id, req.user);
   }
 }

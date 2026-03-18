@@ -37,6 +37,7 @@ export class AuthController {
   @Get('google')
   loginWithGoogle(@Res() res: any) {
     const url = this.authService.getGoogleAuthUrl();
+    console.log(url);
     return res.redirect(url);
   }
 

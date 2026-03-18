@@ -1,15 +1,11 @@
-import { IsNumber, IsUUID } from "class-validator";
+import { IsNotEmpty, IsNumber, IsUUID, Min } from 'class-validator';
 
 export class CreatePedidoDto {
-  @IsNumber()
-  quantity: number;
-
-  @IsNumber()
-  price: number;
-
-  @IsNumber()
-  menuItemId: number;
-
   @IsUUID()
-  reservationId: string;
+  @IsNotEmpty()
+  platoId: string;
+
+  @IsNumber()
+  @Min(1, { message: 'La cantidad mínima es 1' })
+  quantity: number;
 }

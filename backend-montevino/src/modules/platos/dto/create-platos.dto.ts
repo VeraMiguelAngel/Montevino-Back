@@ -7,12 +7,20 @@ export enum TipoProducto {
 }
 
 export class CreatePlatosDto {
-  @ApiProperty({ description: 'Nombre del plato', example: 'Tallarines al Pesto' })
+  @ApiProperty({
+    description: 'Nombre del plato',
+    example: 'Tallarines al Pesto',
+  })
   @IsString()
   @IsNotEmpty()
   name: string;
 
-  @ApiProperty({ description: 'Precio del plato', example: 15.50 })
+  @ApiProperty({ description: 'Descripción detallada de los ingredientes' })
+  @IsString()
+  @IsNotEmpty()
+  description: string;
+
+  @ApiProperty({ description: 'Precio del plato', example: 15.5 })
   @IsNumber()
   @Min(0)
   price: number;
@@ -27,17 +35,16 @@ export class CreatePlatosDto {
   @IsOptional()
   imageUrl?: string;
 
-  @ApiProperty({ description: 'Descripción detallada de los ingredientes' })
-  @IsString()
-  @IsNotEmpty()
-  description: string;
-  
+ 
   @ApiProperty({ example: 50, description: 'Cantidad en stock' })
   @IsNumber()
   @IsNotEmpty()
   stock: number;
   
-  @ApiProperty({ example: 'uuid-de-la-categoria', description: 'ID de la categoría asociada' })
+  @ApiProperty({
+    example: 'uuid-de-la-categoria',
+    description: 'ID de la categoría asociada',
+  })
   @IsUUID()
   @IsNotEmpty()
   categoryId: string;
