@@ -34,6 +34,7 @@ export class ReservationsService {
       where: {
         user: { id: user.id },
         reservationDate: reservationData.reservationDate,
+        status: reservationStatus.CONFIRMADA,
       },
     });
 
@@ -163,23 +164,68 @@ export class ReservationsService {
     return response;
   }
 
-  findAll() {
-    return this.reservationsRepository.find({
+  async findAll() {
+    const reservations = await this.reservationsRepository.find({
       relations: ['table', 'user', 'pedidos', 'pedidos.menuItem'],
     });
+
+    return reservations.map((res) => ({
+      id: res.id,
+      reservationDate: res.reservationDate,
+      startTime: res.startTime,
+      peopleCount: res.peopleCount,
+      totalPrice: Number(res.totalPrice),
+      depositAmount: Number(res.depositAmount),
+      status: res.status,
+
+      user: {
+        name: res.user.name,
+        email: res.user.email,
+      },
+
+      table: {
+        tableNumber: res.table.tableNumber,
+      },
+
+      pedidos: res.pedidos.map((p) => ({
+        quantity: p.quantity,
+        price: Number(p.price),
+        name: p.menuItem.name,
+      })),
+    }));
   }
 
   async findByUser(userId: string) {
-    return this.reservationsRepository.find({
+    const reservations = await this.reservationsRepository.find({
       where: { user: { id: userId } },
       relations: ['table', 'pedidos', 'pedidos.menuItem'],
     });
+
+    return reservations.map((res) => ({
+      id: res.id,
+      reservationDate: res.reservationDate,
+      startTime: res.startTime,
+      peopleCount: res.peopleCount,
+      totalPrice: Number(res.totalPrice),
+      depositAmount: Number(res.depositAmount),
+      status: res.status,
+
+      table: {
+        tableNumber: res.table.tableNumber,
+      },
+
+      pedidos: res.pedidos.map((p) => ({
+        quantity: p.quantity,
+        price: Number(p.price),
+        name: p.menuItem.name,
+      })),
+    }));
   }
 
   async cancel(reservationId: string, user: Users) {
     const reservation = await this.reservationsRepository.findOne({
       where: { id: reservationId },
-      relations: ['pedidos', 'pedidos.menuItem'],
+      relations: ['pedidos', 'pedidos.menuItem', 'user', 'table'],
     });
 
     if (!reservation) {
@@ -201,6 +247,12 @@ export class ReservationsService {
 
     reservation.status = reservationStatus.CANCELADA;
 
-    return await this.reservationsRepository.save(reservation);
+    await this.reservationsRepository.save(reservation);
+
+    return {
+      message: 'Reserva cancelada correctamente',
+      reservationId: reservation.id,
+      status: reservation.status,
+    };
   }
 }

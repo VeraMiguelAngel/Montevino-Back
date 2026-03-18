@@ -1,9 +1,14 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from './entities/user.entity';
 import { Repository } from 'typeorm';
+import { usersRole } from './users-role.enum';
 
 @Injectable()
 export class UsersService {
@@ -57,13 +62,29 @@ export class UsersService {
     return { message: 'User deleted successfully' };
   }
 
-  async findByEmail(email: string) {
-    return await this.usersRepository.findOne({
-      where: { email },
+  async makeAdmin(userId: string, currentUser: Users) {
+    const user = await this.usersRepository.findOne({
+      where: { id: userId },
     });
-  }
 
-  async updateAuth0Id(userId: string, auth0Id: string) {
-    await this.usersRepository.update(userId, { auth0Id });
+    if (!user) {
+      throw new NotFoundException('Usuario no encontrado');
+    }
+
+    if (user.id === currentUser.id) {
+      throw new BadRequestException('No podés modificar tu propio rol');
+    }
+
+    if (user.role === usersRole.ADMIN) {
+      throw new BadRequestException('El usuario ya es admin');
+    }
+
+    user.role = usersRole.ADMIN;
+
+    await this.usersRepository.save(user);
+
+    return {
+      message: 'Usuario ahora es administrador',
+    };
   }
 }
