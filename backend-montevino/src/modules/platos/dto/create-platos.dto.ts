@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, IsNumber, IsBoolean, IsOptional, IsUrl, Min, IsUUID, IsEnum } from 'class-validator';
+import { IsNotEmpty, IsString, IsNumber, IsBoolean, IsOptional, IsUrl, Min, IsUUID, IsEnum, Matches } from 'class-validator';
 
 export enum TipoProducto {
   PLATOS = "platos",
@@ -26,12 +26,16 @@ export class CreatePlatosDto {
   price: number;
 
   @ApiProperty({ description: "Ingredientes de plato"})
-  @IsString()
+  @IsUrl({}, { message: 'La imageUrl debe ser una URL válida' })
   @IsNotEmpty()
   ingredientes: string;
   
   @ApiProperty({ description: 'URL de la foto del plato', required: false })
-  @IsUrl()
+  @IsString()
+  @IsUrl({}, { message: 'La imageUrl debe ser una URL válida' })
+  @Matches(/\.(jpg|jpeg|png|webp)$/i, {
+    message: 'La imagen debe ser un formato válido (jpg, jpeg, png, webp)',
+  })
   @IsOptional()
   imageUrl?: string;
 

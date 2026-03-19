@@ -21,11 +21,16 @@ export class FileUploadRepository {
         });
     }
 
-    async uploadImageFromUrl(url: string): Promise<UploadApiResponse> {
+    async uploadImageFromUrl(url: string, playerName: string): Promise<UploadApiResponse> {
   return new Promise((resolve, reject) => {
     cloudinary.uploader.upload(
       url,
-      { resource_type: "image", folder: "menu_platos" },
+      { 
+        resource_type: "image", 
+        folder: "menu_platos",
+        public_id: playerName.toLowerCase().replace(/\s+/g, '_'),
+        overwrite: true 
+      },
       (error, result) => {
         if (error) reject(error);
         else resolve(result!);

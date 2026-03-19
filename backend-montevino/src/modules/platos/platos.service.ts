@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import data from 'data.json';
 import { Repository } from 'typeorm';
@@ -31,7 +31,7 @@ export class PlatosService {
 
       let finalImageUrl = item.imageUrl;
       try {
-        const upload = await this.fileUploadRepository.uploadImageFromUrl(item.imageUrl);
+        const upload = await this.fileUploadRepository.uploadImageFromUrl(item.imageUrl, item.name);
         finalImageUrl = upload.secure_url;
         console.log(`Imagen subida para: ${item.name}`);
       } catch (error) {
@@ -69,11 +69,13 @@ export class PlatosService {
 
     if (finalImageUrl && !finalImageUrl.includes('cloudinary.com')) {
       try {
-        console.log(`Subiendo nueva imagen a Cloudinary para el plato: ${createPlatoDto.name}`);
-        const upload = await this.fileUploadRepository.uploadImageFromUrl(finalImageUrl);
+        console.log(`Subiendo nueva imagen a Cloudinary para el plato: ${createPlatoDto.name}`)
+        const upload = await this.fileUploadRepository.uploadImageFromUrl(finalImageUrl, createPlatoDto.name);
         finalImageUrl = upload.secure_url;
       } catch (error) {
-        console.error('Error al subir imagen en create, se usará la URL original:', error.message);
+        throw new BadRequestException(
+        `No se pudo procesar la imagen de la URL proporcionada. Verificá que sea un link directo a una imagen. Error: ${error.message}`
+      );
       }
     }
 
