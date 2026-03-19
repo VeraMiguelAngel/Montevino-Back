@@ -36,7 +36,7 @@ export class Reservations {
   @Column({
     type: 'enum',
     enum: reservationStatus,
-    default: reservationStatus.CONFIRMADA,
+    default: reservationStatus.PAGO_PENDIENTE,
   })
   status: reservationStatus;
 
@@ -46,7 +46,7 @@ export class Reservations {
 
   @ManyToOne(() => Table, (table) => table.reservations)
   @JoinColumn({ name: 'tableId' })
-  table: Table;
+  table: Table | null;
 
   @OneToMany(() => Pedidos, (pedido) => pedido.reservation)
   pedidos: Pedidos[];

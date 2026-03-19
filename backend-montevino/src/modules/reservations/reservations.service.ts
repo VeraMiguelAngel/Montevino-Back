@@ -11,7 +11,6 @@ import { CreateReservationDto } from './dto/create-reservation.dto';
 import { TablesService } from '../tables/tables.service';
 import { Pedidos } from '../pedidos/entities/pedido.entity';
 import { Platos } from '../platos/entities/platos.entity';
-import { ReservationResponseDto } from './dto/reservation-response.dto';
 import { Users } from '../users/entities/user.entity';
 import { reservationStatus } from './reservation-status.enum';
 
@@ -39,12 +38,13 @@ export class ReservationsService {
     });
 
     if (existingReservation) {
-      throw new BadRequestException('Ya tenés una reserva para este día');
+      throw new BadRequestException(
+        'Ya tenés una reserva confirmada para este día',
+      );
     }
 
     const reservationDate = new Date(createReservationDto.reservationDate);
     const today = new Date();
-
     today.setHours(0, 0, 0, 0);
 
     if (reservationDate < today) {
@@ -68,19 +68,10 @@ export class ReservationsService {
       );
     }
 
-    const table = await this.tablesService.findAvailableTable(
-      createReservationDto.reservationDate,
-      createReservationDto.startTime,
-    );
-
-    if (!table) {
-      throw new NotFoundException('No hay mesas disponibles');
-    }
-
     const reservation = this.reservationsRepository.create({
       ...reservationData,
       user: user,
-      table: table,
+      table: null,
       totalPrice: 0,
       depositAmount: 0,
     });
@@ -99,6 +90,15 @@ export class ReservationsService {
           throw new NotFoundException('Plato no encontrado');
         }
 
+        if (plato.stock < pedido.quantity) {
+          throw new BadRequestException(
+            `No hay suficiente stock de ${plato.name}`,
+          );
+        }
+
+        plato.stock -= pedido.quantity;
+        await this.platosRepository.save(plato);
+
         const price = Number(plato.price) * pedido.quantity;
 
         const newPedido = this.pedidosRepository.create({
@@ -113,55 +113,37 @@ export class ReservationsService {
         total += price;
       }
     }
+
     reservation.totalPrice = total;
 
     const baseAmount = 2000 * reservation.peopleCount;
 
     if (total > 0) {
-      const percentage = Number(total) * 0.15;
-      reservation.depositAmount = baseAmount + percentage;
+      reservation.depositAmount = baseAmount + Number(total) * 0.15;
     } else {
       reservation.depositAmount = baseAmount + 5000;
     }
 
     await this.reservationsRepository.save(reservation);
 
-    const fullReservation = await this.reservationsRepository.findOne({
-      where: { id: reservation.id },
-      relations: ['table', 'user', 'pedidos', 'pedidos.menuItem'],
-    });
-
-    if (!fullReservation) {
-      throw new NotFoundException('Reserva no encontrada');
-    }
-
-    const response: ReservationResponseDto = {
-      id: fullReservation.id,
-      reservationDate: fullReservation.reservationDate,
-      startTime: fullReservation.startTime,
-      peopleCount: fullReservation.peopleCount,
-      totalPrice: Number(fullReservation.totalPrice),
-      depositAmount: Number(fullReservation.depositAmount),
-      status: fullReservation.status,
-      notes: fullReservation.notes,
-
-      user: {
-        name: fullReservation.user.name,
-        email: fullReservation.user.email,
-      },
-
-      table: {
-        tableNumber: fullReservation.table.tableNumber,
-      },
-
-      pedidos: fullReservation.pedidos.map((pedido) => ({
-        quantity: pedido.quantity,
-        price: Number(pedido.price),
-        name: pedido.menuItem.name,
-      })),
+    return {
+      message: 'Reserva creada. Pendiente de pago.',
+      reservationId: reservation.id,
+      reservationDate: reservation.reservationDate,
+      startTime: reservation.startTime,
+      peopleCount: reservation.peopleCount,
+      totalPrice: Number(reservation.totalPrice),
+      depositAmount: Number(reservation.depositAmount),
+      status: reservation.status,
+      table: null,
+      pedidos:
+        pedidos && pedidos.length > 0
+          ? pedidos.map((pedido) => ({
+              platoId: pedido.platoId,
+              quantity: pedido.quantity,
+            }))
+          : [],
     };
-
-    return response;
   }
 
   async findAll() {
@@ -183,9 +165,11 @@ export class ReservationsService {
         email: res.user.email,
       },
 
-      table: {
-        tableNumber: res.table.tableNumber,
-      },
+      table: res.table
+        ? {
+            tableNumber: res.table.tableNumber,
+          }
+        : null,
 
       pedidos: res.pedidos.map((p) => ({
         quantity: p.quantity,
@@ -210,9 +194,11 @@ export class ReservationsService {
       depositAmount: Number(res.depositAmount),
       status: res.status,
 
-      table: {
-        tableNumber: res.table.tableNumber,
-      },
+      table: res.table
+        ? {
+            tableNumber: res.table.tableNumber,
+          }
+        : null,
 
       pedidos: res.pedidos.map((p) => ({
         quantity: p.quantity,
@@ -220,6 +206,13 @@ export class ReservationsService {
         name: p.menuItem.name,
       })),
     }));
+  }
+
+  async findOne(id: string) {
+    return await this.reservationsRepository.findOne({
+      where: { id },
+      relations: ['table', 'user', 'pedidos', 'pedidos.menuItem'],
+    });
   }
 
   async cancel(reservationId: string, user: Users) {
@@ -254,5 +247,9 @@ export class ReservationsService {
       reservationId: reservation.id,
       status: reservation.status,
     };
+  }
+
+  async save(reservation: any) {
+    return await this.reservationsRepository.save(reservation);
   }
 }

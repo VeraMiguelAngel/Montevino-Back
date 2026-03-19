@@ -4,6 +4,7 @@ import { Table } from './entities/table.entity';
 import { Repository } from 'typeorm';
 import { CreateTableDto } from './dto/create-table.dto';
 import { TableStatus } from './table.enum';
+import { reservationStatus } from '../reservations/reservation-status.enum';
 
 @Injectable()
 export class TablesService {
@@ -25,11 +26,17 @@ export class TablesService {
     });
 
     for (const table of tables) {
-      const isReserved = table.reservations.some(
-        (reservation) =>
-          reservation.reservationDate === date &&
-          reservation.startTime === time,
-      );
+      const isReserved = table.reservations.some((reservation) => {
+        const reservationDate = new Date(reservation.reservationDate)
+          .toISOString()
+          .split('T')[0];
+
+        return (
+          reservationDate === date &&
+          reservation.startTime === time &&
+          reservation.status === reservationStatus.CONFIRMADA
+        );
+      });
 
       if (!isReserved) {
         return table;
@@ -64,11 +71,17 @@ export class TablesService {
     });
 
     return tables.map((table) => {
-      const reserved = table.reservations.some(
-        (reservation) =>
-          reservation.reservationDate === date &&
-          reservation.startTime === time,
-      );
+      const reserved = table.reservations.some((reservation) => {
+        const reservationDate = new Date(reservation.reservationDate)
+          .toISOString()
+          .split('T')[0];
+
+        return (
+          reservationDate === date &&
+          reservation.startTime === time &&
+          reservation.status === reservationStatus.CONFIRMADA
+        );
+      });
 
       return {
         tableNumber: table.tableNumber,
