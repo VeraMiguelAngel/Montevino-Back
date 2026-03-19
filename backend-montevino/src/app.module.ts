@@ -10,6 +10,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { FileUploadModule } from './file-upload/file-upload.module';
 import { AppController } from './app.controller';
 import { TablesModule } from './modules/tables/tables.module';
+import { PaymentsModule } from './modules/payments/payments.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { TablesModule } from './modules/tables/tables.module';
     AuthModule,
     FileUploadModule,
     TablesModule,
+    PaymentsModule,
   ],
   controllers: [AppController],
 })
