@@ -14,5 +14,6 @@ import { Pedidos } from '../pedidos/entities/pedido.entity';
   ],
   controllers: [ReservationsController],
   providers: [ReservationsService],
+  exports: [ReservationsService],
 })
 export class ReservationsModule {}

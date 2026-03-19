@@ -1,4 +1,5 @@
 export enum reservationStatus {
   CONFIRMADA = 'CONFIRMADA',
   CANCELADA = 'CANCELADA',
+  PAGO_PENDIENTE = 'PAGO PENDIENTE',
 }
