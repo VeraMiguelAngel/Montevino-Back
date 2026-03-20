@@ -51,6 +51,7 @@ export class PaymentsService {
           failure: 'http://localhost:3000/failure',
           pending: 'http://localhost:3000/pending',
         },
+        // auto_return: 'approved',
       },
     });
 
