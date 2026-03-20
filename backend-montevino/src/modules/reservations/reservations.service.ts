@@ -13,6 +13,7 @@ import { Pedidos } from '../pedidos/entities/pedido.entity';
 import { Platos } from '../platos/entities/platos.entity';
 import { Users } from '../users/entities/user.entity';
 import { reservationStatus } from './reservation-status.enum';
+import { MailService } from '../notificaciones/mail.service';
 
 @Injectable()
 export class ReservationsService {
@@ -24,6 +25,7 @@ export class ReservationsService {
     @InjectRepository(Platos)
     private platosRepository: Repository<Platos>,
     private tablesService: TablesService,
+    private mailService: MailService,
   ) {}
 
   async create(createReservationDto: CreateReservationDto, user) {
@@ -125,6 +127,30 @@ export class ReservationsService {
     }
 
     await this.reservationsRepository.save(reservation);
+
+    try {
+      const fullRes = await this.findOne(reservation.id);
+      
+      if (fullRes) {
+        this.mailService.sendReservationEmail(user.email, {
+          id: fullRes.id,
+          userName: user.name,
+          date: fullRes.reservationDate,
+          time: fullRes.startTime,
+          people: fullRes.peopleCount,
+          total: fullRes.totalPrice,
+          deposit: fullRes.depositAmount,
+          status: fullRes.status,
+          pedidos: fullRes.pedidos.map(p => ({
+            name: p.menuItem?.name || 'Plato',
+            quantity: p.quantity,
+            price: Number(p.price)
+          }))
+        });
+      }
+    } catch (e) {
+      console.error("Error enviando el mail, pero la reserva se creó igual", e);
+    }
 
     return {
       message: 'Reserva creada. Pendiente de pago.',

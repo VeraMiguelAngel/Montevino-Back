@@ -24,15 +24,15 @@ export class PlatosController {
   constructor(private readonly platosService: PlatosService) {}
 
   @Get()
-  @ApiQuery({ name: 'type', enum: TipoProducto, required: false })
-  @ApiQuery({ name: 'category', type: String, required: false })
+  // @ApiQuery({ name: 'type', enum: TipoProducto, required: false })
+  // @ApiQuery({ name: 'category', type: String, required: false })
   getPlatos(
     @Query('page') page: number = 1,
     @Query('limit') limit: number = 5,
-    @Query('type') type?: TipoProducto,
-    @Query('category') category?: string,
+    // @Query('type') type?: TipoProducto,
+    // @Query('category') category?: string,
   ) {
-    return this.platosService.getPlatos(page, limit, type, category);
+    return this.platosService.getPlatos(page, limit);
   }
 
   @ApiBearerAuth()
