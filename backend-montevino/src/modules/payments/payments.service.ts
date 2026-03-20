@@ -45,7 +45,7 @@ export class PaymentsService {
         },
         external_reference: reservation.id,
         notification_url:
-          'https://savannah-soricine-saul.ngrok-free.dev/payments/webhook',
+          'https://montevino-back-deploy.onrender.com/payments/webhook',
         back_urls: {
           success: 'http://localhost:3000/success',
           failure: 'http://localhost:3000/failure',
