@@ -10,7 +10,7 @@ import {
 
 export class CreateUserDto {
   @IsNotEmpty()
-  @IsEmail()
+  @IsEmail({}, { message: 'El formato del correo electrónico no es válido' })
   email: string;
 
   @IsNotEmpty()
