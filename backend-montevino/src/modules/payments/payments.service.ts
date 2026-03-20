@@ -47,12 +47,14 @@ export class PaymentsService {
         },
         external_reference: reservation.id,
         notification_url:
-          'https://montevino-back-deploy.onrender.com/payments/webhook',
+          //cambiar a url del deploy + /payments/webhook
+          'https://savannah-soricine-saul.ngrok-free.dev/payments/webhook',
         back_urls: {
           success: 'http://localhost:3000/success',
           failure: 'http://localhost:3000/failure',
           pending: 'http://localhost:3000/pending',
         },
+
         // auto_return: 'approved',
       },
     });
@@ -124,7 +126,11 @@ export class PaymentsService {
     try {
       const fullRes = await this.reservationsService.findOne(reservation.id);
 
-      if (fullRes && fullRes.user.email && !fullRes.user.email.includes('example.com')) {
+      if (
+        fullRes &&
+        fullRes.user.email &&
+        !fullRes.user.email.includes('example.com')
+      ) {
         await this.mailService.sendReservationEmail(fullRes.user.email, {
           id: fullRes.id,
           userName: fullRes.user.name,
@@ -135,11 +141,11 @@ export class PaymentsService {
           deposit: fullRes.depositAmount,
           status: fullRes.status,
           tableNumber: table.tableNumber,
-          pedidos: fullRes.pedidos.map(p => ({
+          pedidos: fullRes.pedidos.map((p) => ({
             name: p.menuItem?.name || 'Plato',
             quantity: p.quantity,
-            price: Number(p.price)
-          }))
+            price: Number(p.price),
+          })),
         });
         console.log(`Mail de pago confirmado enviado a ${fullRes.user.email}`);
       }
