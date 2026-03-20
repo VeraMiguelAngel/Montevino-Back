@@ -29,6 +29,14 @@ export class MailService {
   }
 
   async sendReservationEmail(to: string, resData: any) {
+    const isPaid = resData.status === 'CONFIRMADA';
+  
+    const headerColor = isPaid ? '#28a745' : '#7c090c'; 
+    const titleText = isPaid ? '¡Pago Confirmado!' : 'Confirmación de Reserva';
+    const subTitleText = isPaid 
+      ? 'Hemos recibido tu pago correctamente. ¡Tu mesa ya está reservada!' 
+      : 'Tu reserva ha sido recibida con éxito. Aquí están los detalles:';
+
     const pedidosHtml = resData.pedidos.map(p => `
       <tr>
         <td style="padding: 8px; border: 1px solid #ddd;">${p.name}</td>
@@ -38,42 +46,51 @@ export class MailService {
     `).join('');
 
     const html = `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; border: 1px solid #eee; padding: 20px;">
-        <h2 style="color: #7c090c;">Confirmación de Reserva - MonteVino</h2>
-        <p>Hola <strong>${resData.userName}</strong>,</p>
-        <p>Tu reserva ha sido recibida con éxito. Aquí están los detalles:</p>
-        
-        <table style="width: 100%; border-collapse: collapse;">
-          <tr><td><strong>Fecha:</strong></td><td>${resData.date}</td></tr>
-          <tr><td><strong>Horario:</strong></td><td>${resData.time} hs</td></tr>
-          <tr><td><strong>Personas:</strong></td><td>${resData.people}</td></tr>
-          <tr><td><strong>Estado:</strong></td><td>${resData.status}</td></tr>
-        </table>
+      <div style="font-family: Arial, sans-serif; max-width: 600px; border: 1px solid #eee; border-radius: 10px; overflow: hidden; margin: auto;">
+        <div style="background-color: ${headerColor}; color: white; padding: 20px; text-align: center;">
+          <h2 style="margin: 0;">${titleText} - MonteVino</h2>
+        </div>
 
-        <h3>Detalle del Pedido:</h3>
-        <table style="width: 100%; border-collapse: collapse;">
-          <thead>
-            <tr style="background-color: #f2f2f2;">
-              <th style="padding: 8px; border: 1px solid #ddd;">Plato</th>
-              <th style="padding: 8px; border: 1px solid #ddd;">Cant.</th>
-              <th style="padding: 8px; border: 1px solid #ddd;">Subtotal</th>
-            </tr>
-          </thead>
-          <tbody>${pedidosHtml}</tbody>
-        </table>
+        <div style="padding: 20px;">
+          <p>Hola <strong>${resData.userName}</strong>,</p>
+          <p>${subTitleText}</p>
+          
+          <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; background-color: #f9f9f9; padding: 10px; border-radius: 5px;">
+            <tr><td style="padding: 5px;"><strong>Fecha:</strong></td><td>${resData.date}</td></tr>
+            <tr><td style="padding: 5px;"><strong>Horario:</strong></td><td>${resData.time} hs</td></tr>
+            <tr><td style="padding: 5px;"><strong>Personas:</strong></td><td>${resData.people}</td></tr>
+            <tr><td style="padding: 5px;"><strong>Mesa:</strong></td><td>${resData.tableNumber || 'Pendiente de asignación'}</td></tr>
+            <tr><td style="padding: 5px;"><strong>Estado:</strong></td><td style="color: ${headerColor}; font-weight: bold;">${resData.status}</td></tr>
+          </table>
 
-        <h3 style="text-align: right;">Total a Pagar: $${resData.total}</h3>
-        <p style="color: #757575; font-size: 12px;">* Se requiere un depósito de $${resData.deposit} para confirmar.</p>
-        
-        <hr>
-        <p style="text-align: center; font-weight: bold;">Muchas gracias por reservar en MonteVino</p>
+          <h3>Detalle del Pedido:</h3>
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background-color: #f2f2f2;">
+                <th style="padding: 8px; border: 1px solid #ddd; text-align: left;">Plato</th>
+                <th style="padding: 8px; border: 1px solid #ddd;">Cant.</th>
+                <th style="padding: 8px; border: 1px solid #ddd;">Subtotal</th>
+              </tr>
+            </thead>
+            <tbody>${pedidosHtml}</tbody>
+          </table>
+
+          <h3 style="text-align: right; margin-top: 20px;">Total: $${resData.total}</h3>
+          
+          ${!isPaid ? `<p style="color: #757575; font-size: 13px; background: #fff3f3; padding: 10px; border-left: 4px solid #7c090c;">
+            * Se requiere un depósito de <strong>$${resData.deposit}</strong> para confirmar tu lugar.
+          </p>` : ''}
+          
+          <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+          <p style="text-align: center; font-weight: bold; color: #555;">¡Te esperamos en MonteVino!</p>
+        </div>
       </div>
     `;
 
     await this.transporter.sendMail({
       from: '"MonteVino Reservas" <no-reply@montevino.com>',
       to,
-      subject: `Reserva Confirmada #${resData.id.split('-')[0]}`,
+      subject: isPaid ? `Pago Confirmado #${resData.id.split('-')[0]}` : `Reserva Recibida #${resData.id.split('-')[0]}`,
       html,
     });
   }
