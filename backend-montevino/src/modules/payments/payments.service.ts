@@ -7,6 +7,7 @@ import { MercadoPagoConfig, Preference, Payment } from 'mercadopago';
 import { ReservationsService } from '../reservations/reservations.service';
 import { TablesService } from '../tables/tables.service';
 import { reservationStatus } from '../reservations/reservation-status.enum';
+import { MailService } from '../notificaciones/mail.service';
 
 @Injectable()
 export class PaymentsService {
@@ -15,6 +16,7 @@ export class PaymentsService {
   constructor(
     private readonly reservationsService: ReservationsService,
     private readonly tablesService: TablesService,
+    private readonly mailService: MailService,
   ) {
     this.client = new MercadoPagoConfig({
       accessToken: process.env.MP_ACCESS_TOKEN!,
@@ -45,12 +47,15 @@ export class PaymentsService {
         },
         external_reference: reservation.id,
         notification_url:
+          //cambiar a url del deploy + /payments/webhook
           'https://savannah-soricine-saul.ngrok-free.dev/payments/webhook',
         back_urls: {
           success: 'http://localhost:3000/success',
           failure: 'http://localhost:3000/failure',
           pending: 'http://localhost:3000/pending',
         },
+
+        // auto_return: 'approved',
       },
     });
 
@@ -117,6 +122,36 @@ export class PaymentsService {
     reservation.status = reservationStatus.CONFIRMADA;
 
     await this.reservationsService.save(reservation);
+
+    try {
+      const fullRes = await this.reservationsService.findOne(reservation.id);
+
+      if (
+        fullRes &&
+        fullRes.user.email &&
+        !fullRes.user.email.includes('example.com')
+      ) {
+        await this.mailService.sendReservationEmail(fullRes.user.email, {
+          id: fullRes.id,
+          userName: fullRes.user.name,
+          date: fullRes.reservationDate,
+          time: fullRes.startTime,
+          people: fullRes.peopleCount,
+          total: fullRes.totalPrice,
+          deposit: fullRes.depositAmount,
+          status: fullRes.status,
+          tableNumber: table.tableNumber,
+          pedidos: fullRes.pedidos.map((p) => ({
+            name: p.menuItem?.name || 'Plato',
+            quantity: p.quantity,
+            price: Number(p.price),
+          })),
+        });
+        console.log(`Mail de pago confirmado enviado a ${fullRes.user.email}`);
+      }
+    } catch (error) {
+      console.error('Error enviando el mail de confirmación de pago:', error);
+    }
 
     console.log(
       `Reserva ${reservation.id} confirmada con mesa ${table.tableNumber}`,

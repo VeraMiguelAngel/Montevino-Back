@@ -10,11 +10,13 @@ import { UsersService } from '../users/users.service';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import axios from 'axios';
 import * as jwt from 'jsonwebtoken';
+import { MailService } from '../notificaciones/mail.service';
 @Injectable()
 export class AuthService {
   constructor(
     private readonly auth0Config: Auth0Config,
     private readonly usersService: UsersService,
+    private mailService: MailService,
   ) {}
 
   async register(dto: CreateUserDto) {
@@ -30,6 +32,8 @@ export class AuthService {
         ...dto,
         auth0Id: auth0Res.user_id,
       } as any);
+
+      await this.mailService.sendWelcomeEmail(user.email, user.name);
 
       return {
         id: user.id,

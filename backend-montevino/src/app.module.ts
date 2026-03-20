@@ -11,6 +11,8 @@ import { FileUploadModule } from './file-upload/file-upload.module';
 import { AppController } from './app.controller';
 import { TablesModule } from './modules/tables/tables.module';
 import { PaymentsModule } from './modules/payments/payments.module';
+import { MailModule } from './modules/notificaciones/mail.module';
+import { BebidasModule } from './modules/bebidas/bebidas.module';
 
 @Module({
   imports: [
@@ -26,11 +28,13 @@ import { PaymentsModule } from './modules/payments/payments.module';
     UsersModule,
     ReservationsModule,
     PlatosModule,
+    BebidasModule,
     CategoriesModule,
     AuthModule,
     FileUploadModule,
     TablesModule,
     PaymentsModule,
+    MailModule,
   ],
   controllers: [AppController],
 })
