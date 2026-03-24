@@ -30,7 +30,19 @@ export class UsersService {
     return await this.usersRepository.save(newUser);
   }
 
-  async findAll() {
+  async findAll(isActive?: string) {
+    if (isActive === 'true') {
+      return await this.usersRepository.find({
+        where: { isActive: true },
+      });
+    }
+
+    if (isActive === 'false') {
+      return await this.usersRepository.find({
+        where: { isActive: false },
+      });
+    }
+
     return await this.usersRepository.find();
   }
 
@@ -56,14 +68,29 @@ export class UsersService {
     };
   }
 
-  async remove(id: string) {
+  async desactivateUser(id: string) {
     const user = await this.usersRepository.findOneBy({ id });
 
     if (!user) throw new NotFoundException('User not found');
 
-    await this.usersRepository.delete(id);
+    user.isActive = false;
+    await this.usersRepository.save(user);
 
-    return { message: 'User deleted successfully' };
+    return { message: 'User deactivated successfully' };
+  }
+
+  async activateUser(id: string) {
+    const user = await this.usersRepository.findOneBy({ id });
+
+    if (!user) {
+      throw new NotFoundException('Usuario no encontrado');
+    }
+
+    user.isActive = true;
+
+    await this.usersRepository.save(user);
+
+    return { message: 'User activated successfully' };
   }
 
   async makeAdmin(userId: string, currentUser: Users) {
