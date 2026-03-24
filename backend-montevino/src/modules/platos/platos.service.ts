@@ -56,7 +56,7 @@ export class PlatosService {
     return 'Platos Added with Cloudinary Images';
   }
 
-  async create(createPlatoDto: CreatePlatosDto) {
+  async create(createPlatoDto: CreatePlatosDto, file: Express.Multer.File ) {
     const category = await this.categoriesRepository.findOneBy({ 
       id: createPlatoDto.categoryId 
     });
@@ -67,20 +67,22 @@ export class PlatosService {
 
     let finalImageUrl = createPlatoDto.imageUrl;
 
-    if (finalImageUrl && !finalImageUrl.includes('cloudinary.com')) {
+    if (file) {
       try {
-        console.log(`Subiendo nueva imagen a Cloudinary para el plato: ${createPlatoDto.name}`)
-        const upload = await this.fileUploadRepository.uploadImageFromUrl(finalImageUrl, createPlatoDto.name);
+        console.log(`Subiendo archivo real a Cloudinary para: ${createPlatoDto.name}`);
+        const upload = await this.fileUploadRepository.uploadImage(file);
         finalImageUrl = upload.secure_url;
       } catch (error) {
-        throw new BadRequestException(
-        `No se pudo procesar la imagen de la URL proporcionada. Verificá que sea un link directo a una imagen. Error: ${error.message}`
-      );
+        throw new BadRequestException(`Error al subir la imagen: ${error.message}`);
       }
+    } else {
+      throw new BadRequestException('Es obligatorio subir una imagen para el plato');
     }
 
     const newPlato = this.platosRepository.create({
       ...createPlatoDto,
+      price: Number(createPlatoDto.price),
+      stock: Number(createPlatoDto.stock),
       imageUrl: finalImageUrl,
       category: category 
     });
@@ -106,28 +108,37 @@ export class PlatosService {
   }
 
   async update(id: string, updatePlatosDto: UpdatePlatosDto) {
-    const plato = await this.platosRepository.preload({
-      id: id,
-      ...updatePlatosDto,
+  const dataToUpdate: any = { ...updatePlatosDto };
+
+  if (updatePlatosDto.price) {
+    dataToUpdate.price = Number(updatePlatosDto.price);
+  }
+  if (updatePlatosDto.stock) {
+    dataToUpdate.stock = Number(updatePlatosDto.stock);
+  }
+
+  const plato = await this.platosRepository.preload({
+    id: id,
+    ...dataToUpdate, 
+  });
+
+  if (!plato) {
+    throw new NotFoundException(`El plato con ID ${id} no fue encontrado`);
+  }
+
+  if (updatePlatosDto.categoryId) {
+    const category = await this.categoriesRepository.findOneBy({
+      id: updatePlatosDto.categoryId,
     });
 
-    if (!plato) {
-      throw new NotFoundException(`El plato con ID ${id} no fue encontrado`);
+    if (!category) {
+      throw new NotFoundException('La nueva categoría no existe');
     }
-
-    if (updatePlatosDto.categoryId) {
-      const category = await this.categoriesRepository.findOneBy({
-        id: updatePlatosDto.categoryId,
-      });
-
-      if (!category) {
-        throw new NotFoundException('La nueva categoría no existe');
-      }
-      plato.category = category;
-    }
-
-    return await this.platosRepository.save(plato);
+    plato.category = category;
   }
+
+  return await this.platosRepository.save(plato);
+}
 
   async remove(id: string) {
     const plato = await this.findOne(id);

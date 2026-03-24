@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, IsNumber, IsBoolean, IsOptional, IsUrl, Min, IsUUID, IsEnum, Matches } from 'class-validator';
+import { IsNotEmpty, IsString, IsNumber, IsBoolean, IsOptional, IsUrl, Min, IsUUID, IsEnum, Matches, IsNumberString } from 'class-validator';
 
 export enum TipoProducto {
   PLATOS = "platos",
@@ -20,30 +20,26 @@ export class CreatePlatosDto {
   @IsNotEmpty()
   description: string;
 
-  @ApiProperty({ description: 'Precio del plato', example: 15.5 })
-  @IsNumber()
-  @Min(0)
-  price: number;
+  @ApiProperty({ description: 'Precio del plato', example: '15.5' })
+  @IsNumberString({}, { message: 'El precio debe ser un número' })
+  @IsNotEmpty()
+  price: string;
 
-  @ApiProperty({ description: "Ingredientes de plato"})
-  @IsUrl({}, { message: 'La imageUrl debe ser una URL válida' })
+  @ApiProperty({ description: "Ingredientes de plato" })
+  @IsString()
   @IsNotEmpty()
   ingredientes: string;
   
-  @ApiProperty({ description: 'URL de la foto del plato', required: false })
+  @ApiProperty({ description: 'URL de la foto', required: false })
   @IsString()
-  @IsUrl({}, { message: 'La imageUrl debe ser una URL válida' })
-  @Matches(/\.(jpg|jpeg|png|webp)$/i, {
-    message: 'La imagen debe ser un formato válido (jpg, jpeg, png, webp)',
-  })
   @IsOptional()
   imageUrl?: string;
 
  
-  @ApiProperty({ example: 50, description: 'Cantidad en stock' })
-  @IsNumber()
+  @ApiProperty({ example: '50', description: 'Cantidad en stock' })
+  @IsNumberString()
   @IsNotEmpty()
-  stock: number;
+  stock: string;
   
   @ApiProperty({
     example: 'uuid-de-la-categoria',
@@ -61,4 +57,8 @@ export class CreatePlatosDto {
   @IsEnum(TipoProducto)
   @IsNotEmpty()
   type: TipoProducto;
+
+  @ApiProperty({ type: 'string', format: 'binary', description: 'Archivo de imagen' })
+  @IsOptional()
+  file?: any;
 }
