@@ -29,6 +29,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       );
     }
 
+    if (!user.isActive) {
+      throw new UnauthorizedException('Usuario desactivado');
+    }
+
     return user;
   }
 }
