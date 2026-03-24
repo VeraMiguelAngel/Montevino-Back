@@ -32,6 +32,8 @@ export class PaymentsService {
 
     const preference = new Preference(this.client);
 
+    const FRONTEND_URL = process.env.FRONTEND_URL;
+
     const response = await preference.create({
       body: {
         items: [
@@ -49,11 +51,11 @@ export class PaymentsService {
         notification_url:
           'https://montevino-back-deploy.onrender.com/payments/webhook',
         back_urls: {
-          success: 'http://localhost:3000/success',
-          failure: 'http://localhost:3000/failure',
-          pending: 'http://localhost:3000/pending',
+          success: `${FRONTEND_URL}/pagoExitoso`,
+          failure: `${FRONTEND_URL}/pagoFallido`,
+          pending: `${FRONTEND_URL}/pagoPendiente`,
         },
-        // auto_return: 'approved',
+        auto_return: 'approved',
       },
     });
 
