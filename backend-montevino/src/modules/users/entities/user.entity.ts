@@ -25,6 +25,9 @@ export class Users {
   })
   role: usersRole;
 
+  @Column({ default: true })
+  isActive: boolean;
+
   @OneToMany(() => Reservations, (reservarion) => reservarion.user)
   reservations: Reservations[];
 }
