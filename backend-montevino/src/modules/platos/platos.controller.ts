@@ -9,8 +9,13 @@ import {
   Post,
   Query,
   UseGuards,
+  UseInterceptors,
+  UploadedFile,
+  ParseFilePipe,
+  MaxFileSizeValidator,
+  FileTypeValidator,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiQuery } from '@nestjs/swagger';
 import { PlatosService } from './platos.service';
 import { UpdatePlatosDto } from './dto/update-platos.dto';
 import { CreatePlatosDto, TipoProducto } from './dto/create-platos.dto';
@@ -18,6 +23,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth-guard';
 import { Roles } from 'src/decorators/roles.decorator';
 import { usersRole } from '../users/users-role.enum';
 import { RolesGuard } from '../auth/guards/roles.guard';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('platos')
 export class PlatosController {
@@ -63,8 +69,35 @@ export class PlatosController {
   @Roles(usersRole.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Post()
-  create(@Body() createPlatoDto: CreatePlatosDto) {
-    return this.platosService.create(createPlatoDto);
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: { type: 'string', format: 'binary' },
+        name: { type: 'string' },
+        description: { type: 'string' },
+        price: { type: 'number' },
+        stock: { type: 'number' },
+        ingredientes: { type: 'string' },
+        categoryId: { type: 'string' },
+        type: { type: 'string', enum: ['bebidas', 'platos'] },
+      },
+    },
+  })
+  @UseInterceptors(FileInterceptor('file'))
+  create(
+    @Body() createPlatoDto: CreatePlatosDto,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 500000, message: "Máximo 500 KB" }),
+          new FileTypeValidator({ fileType: /(jpg|jpeg|png|webp)$/ }),
+        ],
+      }),
+    ) file: Express.Multer.File,
+  ) {
+    return this.platosService.create(createPlatoDto, file);
   }
 
   @ApiBearerAuth()
