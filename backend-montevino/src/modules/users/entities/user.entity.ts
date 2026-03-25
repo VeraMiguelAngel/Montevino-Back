@@ -25,6 +25,11 @@ export class Users {
   })
   role: usersRole;
 
+  @Column({ 
+    type: 'text', 
+    default: 'https://res.cloudinary.com/dcsar5wzo/image/upload/v1774410578/logo_usuario_scbz0b.png' 
+  })
+  imgUrl: string;
   @Column({ default: true })
   isActive: boolean;
 

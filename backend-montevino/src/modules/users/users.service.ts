@@ -9,12 +9,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { usersRole } from './users-role.enum';
+import { FileUploadRepository } from 'src/file-upload/file-upload.repository';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(Users)
     private readonly usersRepository: Repository<Users>,
+    private readonly fileUploadRepository: FileUploadRepository,
   ) {}
 
   async findByAuth0Id(auth0Id: string): Promise<Users | null> {
@@ -55,16 +57,27 @@ export class UsersService {
     });
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto) {
+  async update(id: string, updateUserDto: UpdateUserDto, file?: Express.Multer.File) {
     const user = await this.usersRepository.findOneBy({ id });
 
     if (!user) throw new NotFoundException('User not found');
 
+    if (file) {
+      const upload = await this.fileUploadRepository.uploadImage(file);
+      user.imgUrl = upload.secure_url;
+    }
+
     if (updateUserDto.name) user.name = updateUserDto.name;
     if (updateUserDto.email) user.email = updateUserDto.email;
 
+    await this.usersRepository.save(user);
     return {
       message: 'User updated successfully',
+      user: {
+        id: user.id,
+        name: user.name,
+        imgUrl: user.imgUrl
+      }
     };
   }
 
