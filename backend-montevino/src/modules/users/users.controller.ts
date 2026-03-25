@@ -4,11 +4,11 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
   UseGuards,
   Req,
   UseInterceptors,
   UploadedFile,
+  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -27,8 +27,8 @@ export class UsersController {
   @Roles(usersRole.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  findAll(@Query('isActive') isActive?: string) {
+    return this.usersService.findAll(isActive);
   }
 
   @ApiBearerAuth()
@@ -51,9 +51,17 @@ export class UsersController {
   @ApiBearerAuth()
   @Roles(usersRole.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(id);
+  @Patch(':id')
+  desactivateUser(@Param('id') id: string) {
+    return this.usersService.desactivateUser(id);
+  }
+
+  @ApiBearerAuth()
+  @Roles(usersRole.ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Patch(':id/activate')
+  activateUser(@Param('id') id: string) {
+    return this.usersService.activateUser(id);
   }
 
   @ApiBearerAuth()

@@ -14,7 +14,6 @@ export default registerAs('typeorm', () => {
       migrations: ['dist/migrations/*{.ts,.js}'],
     };
   }
-
   // Local
   return {
     type: 'postgres',
