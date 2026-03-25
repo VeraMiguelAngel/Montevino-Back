@@ -46,7 +46,7 @@ export class UsersController {
   @ApiBearerAuth()
   @Roles(usersRole.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Patch(':id')
+  @Patch(':id/desactivate')
   desactivateUser(@Param('id') id: string) {
     return this.usersService.desactivateUser(id);
   }
