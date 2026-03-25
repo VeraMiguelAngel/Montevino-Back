@@ -58,11 +58,14 @@ export class PlatosController {
   @Roles(usersRole.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Put(':id')
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor('file'))
   update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updatePlatosDto: UpdatePlatosDto,
+    @UploadedFile() file?: Express.Multer.File,
   ) {
-    return this.platosService.update(id, updatePlatosDto);
+    return this.platosService.update(id, updatePlatosDto, file);
   }
 
   @ApiBearerAuth()

@@ -32,4 +32,8 @@ export class CreateUserDto {
     message: 'El nombre solo puede contener letras, acentos y espacios',
   })
   name: string;
+
+  @IsOptional()
+  @IsString()
+  imgUrl?: string;
 }
