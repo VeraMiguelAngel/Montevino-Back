@@ -32,16 +32,23 @@ export class ReservationsService {
     const { pedidos, ...reservationData } = createReservationDto;
 
     const existingReservation = await this.reservationsRepository.findOne({
-      where: {
-        user: { id: user.id },
-        reservationDate: reservationData.reservationDate,
-        status: reservationStatus.CONFIRMADA,
-      },
+      where: [
+        {
+          user: { id: user.id },
+          reservationDate: reservationData.reservationDate,
+          status: reservationStatus.CONFIRMADA,
+        },
+        {
+          user: { id: user.id },
+          reservationDate: reservationData.reservationDate,
+          status: reservationStatus.PAGO_PENDIENTE,
+        },
+      ],
     });
 
     if (existingReservation) {
       throw new BadRequestException(
-        'Ya tenés una reserva confirmada para este día',
+        'Ya tenés una reserva activa para este día',
       );
     }
 
@@ -64,23 +71,18 @@ export class ReservationsService {
 
     const hour = parseInt(createReservationDto.startTime.split(':')[0]);
 
-    if (hour < 18 || hour > 23) {
+    if (hour < 18 || hour > 24) {
       throw new BadRequestException(
-        'Las reservas solo se pueden hacer entre las 18:00 y 23:00',
+        'Las reservas solo se pueden hacer entre las 18:00 y 00:00',
       );
     }
 
-    const reservation = this.reservationsRepository.create({
-      ...reservationData,
-      user: user,
-      table: null,
-      totalPrice: 0,
-      depositAmount: 0,
-    });
-
-    await this.reservationsRepository.save(reservation);
-
     let total = 0;
+    const platosValidados: {
+      plato: any;
+      quantity: number;
+      price: number;
+    }[] = [];
 
     if (pedidos && pedidos.length > 0) {
       for (const pedido of pedidos) {
@@ -98,22 +100,40 @@ export class ReservationsService {
           );
         }
 
-        plato.stock -= pedido.quantity;
-        await this.platosRepository.save(plato);
-
         const price = Number(plato.price) * pedido.quantity;
 
-        const newPedido = this.pedidosRepository.create({
+        platosValidados.push({
+          plato,
           quantity: pedido.quantity,
           price,
-          menuItem: plato,
-          reservation,
         });
-
-        await this.pedidosRepository.save(newPedido);
 
         total += price;
       }
+    }
+
+    const reservation = this.reservationsRepository.create({
+      ...reservationData,
+      user: user,
+      table: null,
+      totalPrice: 0,
+      depositAmount: 0,
+    });
+
+    await this.reservationsRepository.save(reservation);
+
+    for (const item of platosValidados) {
+      item.plato.stock -= item.quantity;
+      await this.platosRepository.save(item.plato);
+
+      const newPedido = this.pedidosRepository.create({
+        quantity: item.quantity,
+        price: item.price,
+        menuItem: item.plato,
+        reservation,
+      });
+
+      await this.pedidosRepository.save(newPedido);
     }
 
     reservation.totalPrice = total;
@@ -130,7 +150,7 @@ export class ReservationsService {
 
     try {
       const fullRes = await this.findOne(reservation.id);
-      
+
       if (fullRes) {
         this.mailService.sendReservationEmail(user.email, {
           id: fullRes.id,
@@ -141,15 +161,15 @@ export class ReservationsService {
           total: fullRes.totalPrice,
           deposit: fullRes.depositAmount,
           status: fullRes.status,
-          pedidos: fullRes.pedidos.map(p => ({
+          pedidos: fullRes.pedidos.map((p) => ({
             name: p.menuItem?.name || 'Plato',
             quantity: p.quantity,
-            price: Number(p.price)
-          }))
+            price: Number(p.price),
+          })),
         });
       }
     } catch (e) {
-      console.error("Error enviando el mail, pero la reserva se creó igual", e);
+      console.error('Error enviando el mail, pero la reserva se creó igual', e);
     }
 
     return {
