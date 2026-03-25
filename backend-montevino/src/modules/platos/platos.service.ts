@@ -107,7 +107,7 @@ export class PlatosService {
     return this.platosRepository.findOneBy({ id });
   }
 
-  async update(id: string, updatePlatosDto: UpdatePlatosDto) {
+  async update(id: string, updatePlatosDto: UpdatePlatosDto, file?: Express.Multer.File) {
   const dataToUpdate: any = { ...updatePlatosDto };
 
   if (updatePlatosDto.price) {
@@ -115,6 +115,11 @@ export class PlatosService {
   }
   if (updatePlatosDto.stock) {
     dataToUpdate.stock = Number(updatePlatosDto.stock);
+  }
+
+  if (file) {
+    const upload = await this.fileUploadRepository.uploadImage(file);
+    dataToUpdate.imageUrl = upload.secure_url;
   }
 
   const plato = await this.platosRepository.preload({

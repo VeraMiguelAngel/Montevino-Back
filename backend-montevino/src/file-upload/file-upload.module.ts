@@ -10,5 +10,6 @@ import { Platos } from 'src/modules/platos/entities/platos.entity';
   imports: [TypeOrmModule.forFeature([Platos])],
   controllers: [FileUploadController],
   providers: [FileUploadService, CloudinaryConfig, FileUploadRepository],
+  exports: [FileUploadRepository],
 })
 export class FileUploadModule {}

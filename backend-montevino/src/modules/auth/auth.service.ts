@@ -122,6 +122,7 @@ export class AuthService {
           auth0Id: decoded.sub,
           email: decoded.email,
           name: decoded.name,
+          imgUrl: decoded.picture || decoded.photo,
         } as any);
       }
       return {
