@@ -4,13 +4,12 @@ import * as nodemailer from 'nodemailer';
 @Injectable()
 export class MailService {
   private transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false,
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
-    },
-    tls: {
-      rejectUnauthorized: false,
     },
   });
 
@@ -24,7 +23,7 @@ export class MailService {
     `;
 
     await this.transporter.sendMail({
-      from: '"MonteVino Restaurant" <no-reply@montevino.com>',
+      from: `"MonteVino Restaurant" <${process.env.EMAIL_USER}>`,
       to,
       subject: '¡Bienvenido a MonteVino!',
       html,
@@ -33,20 +32,24 @@ export class MailService {
 
   async sendReservationEmail(to: string, resData: any) {
     const isPaid = resData.status === 'CONFIRMADA';
-  
-    const headerColor = isPaid ? '#28a745' : '#7c090c'; 
+
+    const headerColor = isPaid ? '#28a745' : '#7c090c';
     const titleText = isPaid ? '¡Pago Confirmado!' : 'Confirmación de Reserva';
-    const subTitleText = isPaid 
-      ? 'Hemos recibido tu pago correctamente. ¡Tu mesa ya está reservada!' 
+    const subTitleText = isPaid
+      ? 'Hemos recibido tu pago correctamente. ¡Tu mesa ya está reservada!'
       : 'Tu reserva ha sido recibida con éxito. Aquí están los detalles:';
 
-    const pedidosHtml = resData.pedidos.map(p => `
+    const pedidosHtml = resData.pedidos
+      .map(
+        (p) => `
       <tr>
         <td style="padding: 8px; border: 1px solid #ddd;">${p.name}</td>
         <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">${p.quantity}</td>
         <td style="padding: 8px; border: 1px solid #ddd; text-align: right;">$${p.price}</td>
       </tr>
-    `).join('');
+    `,
+      )
+      .join('');
 
     const html = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; border: 1px solid #eee; border-radius: 10px; overflow: hidden; margin: auto;">
@@ -80,9 +83,13 @@ export class MailService {
 
           <h3 style="text-align: right; margin-top: 20px;">Total: $${resData.total}</h3>
           
-          ${!isPaid ? `<p style="color: #757575; font-size: 13px; background: #fff3f3; padding: 10px; border-left: 4px solid #7c090c;">
+          ${
+            !isPaid
+              ? `<p style="color: #757575; font-size: 13px; background: #fff3f3; padding: 10px; border-left: 4px solid #7c090c;">
             * Se requiere un depósito de <strong>$${resData.deposit}</strong> para confirmar tu lugar.
-          </p>` : ''}
+          </p>`
+              : ''
+          }
           
           <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
           <p style="text-align: center; font-weight: bold; color: #555;">¡Te esperamos en MonteVino!</p>
@@ -91,9 +98,11 @@ export class MailService {
     `;
 
     await this.transporter.sendMail({
-      from: '"MonteVino Reservas" <no-reply@montevino.com>',
+      from: `"MonteVino Reservas" <${process.env.EMAIL_USER}>`,
       to,
-      subject: isPaid ? `Pago Confirmado #${resData.id.split('-')[0]}` : `Reserva Recibida #${resData.id.split('-')[0]}`,
+      subject: isPaid
+        ? `Pago Confirmado #${resData.id.split('-')[0]}`
+        : `Reserva Recibida #${resData.id.split('-')[0]}`,
       html,
     });
   }

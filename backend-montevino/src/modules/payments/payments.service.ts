@@ -49,7 +49,6 @@ export class PaymentsService {
         },
         external_reference: reservation.id,
         notification_url:
-          //cambiar a url del deploy + /payments/webhook
           'https://montevino-back-deploy.onrender.com/payments/webhook',
         back_urls: {
           success: `${FRONTEND_URL}/pagoExitoso`,
