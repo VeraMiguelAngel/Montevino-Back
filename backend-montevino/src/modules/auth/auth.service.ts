@@ -33,7 +33,9 @@ export class AuthService {
         auth0Id: auth0Res.user_id,
       } as any);
 
-      await this.mailService.sendWelcomeEmail(user.email, user.name);
+      this.mailService
+        .sendWelcomeEmail(user.email, user.name)
+        .catch((err) => console.error('Error enviando mail de fondo:', err));
 
       return {
         id: user.id,
@@ -127,8 +129,9 @@ export class AuthService {
           name: decoded.name,
           imgUrl: decoded.picture || decoded.photo,
         } as any);
-
-        await this.mailService.sendWelcomeEmail(user.email, user.name);
+        this.mailService
+          .sendWelcomeEmail(user.email, user.name)
+          .catch((err) => console.error('Error enviando mail de fondo:', err));
       }
       return {
         access_token,

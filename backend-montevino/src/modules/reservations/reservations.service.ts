@@ -152,7 +152,7 @@ export class ReservationsService {
       const fullRes = await this.findOne(reservation.id);
 
       if (fullRes) {
-        await this.mailService.sendReservationEmail(user.email, {
+        this.mailService.sendReservationEmail(user.email, {
           id: fullRes.id,
           userName: user.name,
           date: fullRes.reservationDate,
@@ -170,6 +170,24 @@ export class ReservationsService {
       }
     } catch (e) {
       console.error('Error enviando el mail, pero la reserva se creó igual', e);
+      return {
+        message: 'Reserva creada. Pendiente de pago.',
+        reservationId: reservation.id,
+        reservationDate: reservation.reservationDate,
+        startTime: reservation.startTime,
+        peopleCount: reservation.peopleCount,
+        totalPrice: Number(reservation.totalPrice),
+        depositAmount: Number(reservation.depositAmount),
+        status: reservation.status,
+        table: null,
+        pedidos:
+          pedidos && pedidos.length > 0
+            ? pedidos.map((pedido) => ({
+                platoId: pedido.platoId,
+                quantity: pedido.quantity,
+              }))
+            : [],
+      };
     }
 
     return {
