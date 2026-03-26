@@ -87,12 +87,15 @@ export class AuthService {
     const clientId = process.env.AUTH0_CLIENT_ID;
     const redirectUri = process.env.AUTH0_CALLBACK_URL;
 
+    const audience = process.env.AUTH0_AUDIENCE;
+
     return (
       `https://${domain}/authorize?` +
       `response_type=code&` +
       `client_id=${clientId}&` +
       `redirect_uri=${redirectUri}&` +
       `scope=openid%20profile%20email&` +
+      `audience=${encodeURIComponent(audience!)}&` +
       `connection=google-oauth2`
     );
   }

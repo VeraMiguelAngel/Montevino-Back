@@ -1,13 +1,15 @@
 import {
   BadRequestException,
+  ConflictException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Users } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Users } from './entities/user.entity';
-import { Repository } from 'typeorm';
 import { usersRole } from './users-role.enum';
 import { FileUploadRepository } from 'src/file-upload/file-upload.repository';
 
@@ -19,116 +21,100 @@ export class UsersService {
     private readonly fileUploadRepository: FileUploadRepository,
   ) {}
 
-  async findByAuth0Id(auth0Id: string): Promise<Users | null> {
-    return this.usersRepository.findOne({ where: { auth0Id } });
-  }
+  async create(dto: CreateUserDto) {
+    const email = dto.email.toLowerCase().trim();
+    const existing = await this.usersRepository.findOneBy({ email });
 
-  async findByEmail(email: string): Promise<Users | null> {
-    return this.usersRepository.findOne({ where: { email } });
-  }
+    if (existing) {
+      throw new ConflictException('El correo ya está registrado');
+    }
 
-  async create(createUserDto: CreateUserDto) {
-    const newUser = this.usersRepository.create(createUserDto);
-    return await this.usersRepository.save(newUser);
+    const user = this.usersRepository.create({
+      email,
+      name: dto.name,
+      auth0Id: dto.auth0Id,
+      imgUrl: dto.imgUrl,
+      role: usersRole.USER,
+      isActive: true,
+    });
+
+    return await this.usersRepository.save(user);
   }
 
   async findAll(isActive?: string) {
-    if (isActive === 'true') {
-      return await this.usersRepository.find({
-        where: { isActive: true },
-      });
+    if (isActive === undefined) {
+      return await this.usersRepository.find();
     }
 
-    if (isActive === 'false') {
-      return await this.usersRepository.find({
-        where: { isActive: false },
-      });
+    if (isActive !== 'true' && isActive !== 'false') {
+      throw new BadRequestException('isActive debe ser true o false');
     }
 
-    return await this.usersRepository.find();
-  }
-
-  async findOne(id: string) {
-    return await this.usersRepository.findOne({
-      where: { id },
-      relations: {
-        reservations: true,
-      },
+    return await this.usersRepository.find({
+      where: { isActive: isActive === 'true' },
     });
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto, file?: Express.Multer.File) {
+  async findOne(id: string) {
     const user = await this.usersRepository.findOneBy({ id });
 
-    if (!user) throw new NotFoundException('User not found');
+    if (!user) {
+      throw new NotFoundException('Usuario no encontrado');
+    }
+
+    return user;
+  }
+
+  async findByEmail(email: string) {
+    return await this.usersRepository.findOneBy({ email: email.toLowerCase().trim() });
+  }
+
+  async findByAuth0Id(auth0Id: string) {
+    return await this.usersRepository.findOneBy({ auth0Id });
+  }
+
+  async update(id: string, dto: UpdateUserDto, file?: Express.Multer.File) {
+    const user = await this.findOne(id);
+
+    if (dto.email && dto.email.toLowerCase().trim() !== user.email) {
+      const exists = await this.findByEmail(dto.email);
+      if (exists && exists.id !== user.id) {
+        throw new ConflictException('El correo ya está registrado');
+      }
+      user.email = dto.email.toLowerCase().trim();
+    }
+
+    if (dto.name) {
+      user.name = dto.name;
+    }
 
     if (file) {
       const upload = await this.fileUploadRepository.uploadImage(file);
       user.imgUrl = upload.secure_url;
     }
 
-    if (updateUserDto.name) user.name = updateUserDto.name;
-    if (updateUserDto.email) user.email = updateUserDto.email;
-
-    await this.usersRepository.save(user);
-    return {
-      message: 'User updated successfully',
-      user: {
-        id: user.id,
-        name: user.name,
-        imgUrl: user.imgUrl
-      }
-    };
+    return await this.usersRepository.save(user);
   }
 
   async desactivateUser(id: string) {
-    const user = await this.usersRepository.findOneBy({ id });
-
-    if (!user) throw new NotFoundException('User not found');
-
+    const user = await this.findOne(id);
     user.isActive = false;
-    await this.usersRepository.save(user);
-
-    return { message: 'User deactivated successfully' };
+    return await this.usersRepository.save(user);
   }
 
   async activateUser(id: string) {
-    const user = await this.usersRepository.findOneBy({ id });
-
-    if (!user) {
-      throw new NotFoundException('Usuario no encontrado');
-    }
-
+    const user = await this.findOne(id);
     user.isActive = true;
-
-    await this.usersRepository.save(user);
-
-    return { message: 'User activated successfully' };
+    return await this.usersRepository.save(user);
   }
 
-  async makeAdmin(userId: string, currentUser: Users) {
-    const user = await this.usersRepository.findOne({
-      where: { id: userId },
-    });
-
-    if (!user) {
-      throw new NotFoundException('Usuario no encontrado');
+  async makeAdmin(id: string, requester: Users) {
+    if (requester?.id === id) {
+      throw new ForbiddenException('No puedes cambiar tu propio rol');
     }
 
-    if (user.id === currentUser.id) {
-      throw new BadRequestException('No podés modificar tu propio rol');
-    }
-
-    if (user.role === usersRole.ADMIN) {
-      throw new BadRequestException('El usuario ya es admin');
-    }
-
+    const user = await this.findOne(id);
     user.role = usersRole.ADMIN;
-
-    await this.usersRepository.save(user);
-
-    return {
-      message: 'Usuario ahora es administrador',
-    };
+    return await this.usersRepository.save(user);
   }
 }
