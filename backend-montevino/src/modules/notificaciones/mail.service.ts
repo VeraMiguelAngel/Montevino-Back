@@ -4,13 +4,12 @@ import * as nodemailer from 'nodemailer';
 @Injectable()
 export class MailService {
   private transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
-    },
-    tls: {
-      rejectUnauthorized: false,
     },
   });
 
@@ -24,7 +23,7 @@ export class MailService {
     `;
 
     await this.transporter.sendMail({
-      from: '"MonteVino Restaurant" <no-reply@montevino.com>',
+      from: `"MonteVino Restaurant" <${process.env.EMAIL_USER}>`,
       to,
       subject: '¡Bienvenido a MonteVino!',
       html,
@@ -99,7 +98,7 @@ export class MailService {
     `;
 
     await this.transporter.sendMail({
-      from: '"MonteVino Reservas" <no-reply@montevino.com>',
+      from: `"MonteVino Reservas" <${process.env.EMAIL_USER}>`,
       to,
       subject: isPaid
         ? `Pago Confirmado #${resData.id.split('-')[0]}`
