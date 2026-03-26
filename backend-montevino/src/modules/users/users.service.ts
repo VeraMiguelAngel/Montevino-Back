@@ -66,7 +66,9 @@ export class UsersService {
   }
 
   async findByEmail(email: string) {
-    return await this.usersRepository.findOneBy({ email: email.toLowerCase().trim() });
+    return await this.usersRepository.findOneBy({
+      email: email.toLowerCase().trim(),
+    });
   }
 
   async findByAuth0Id(auth0Id: string) {
