@@ -127,6 +127,7 @@ export class AuthService {
           name: decoded.name,
           imgUrl: decoded.picture || decoded.photo,
         } as any);
+
         await this.mailService.sendWelcomeEmail(user.email, user.name);
       }
       return {

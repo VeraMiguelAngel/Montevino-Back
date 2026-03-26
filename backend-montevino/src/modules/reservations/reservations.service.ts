@@ -152,7 +152,7 @@ export class ReservationsService {
       const fullRes = await this.findOne(reservation.id);
 
       if (fullRes) {
-        this.mailService.sendReservationEmail(user.email, {
+        await this.mailService.sendReservationEmail(user.email, {
           id: fullRes.id,
           userName: user.name,
           date: fullRes.reservationDate,
