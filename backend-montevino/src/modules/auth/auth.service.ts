@@ -10,13 +10,13 @@ import { UsersService } from '../users/users.service';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import axios from 'axios';
 import * as jwt from 'jsonwebtoken';
-import { MailService } from '../notificaciones/mail.service';
+// import { MailService } from '../notificaciones/mail.service';
 @Injectable()
 export class AuthService {
   constructor(
     private readonly auth0Config: Auth0Config,
     private readonly usersService: UsersService,
-    private mailService: MailService,
+    // private mailService: MailService,
   ) {}
 
   async register(dto: CreateUserDto) {
@@ -33,9 +33,9 @@ export class AuthService {
         auth0Id: auth0Res.user_id,
       } as any);
 
-      this.mailService
-        .sendWelcomeEmail(user.email, user.name)
-        .catch((err) => console.error('Error enviando mail de fondo:', err));
+      // this.mailService
+      //   .sendWelcomeEmail(user.email, user.name)
+      //   .catch((err) => console.error('Error enviando mail de fondo:', err));
 
       return {
         id: user.id,
@@ -129,9 +129,9 @@ export class AuthService {
           name: decoded.name,
           imgUrl: decoded.picture || decoded.photo,
         } as any);
-        this.mailService
-          .sendWelcomeEmail(user.email, user.name)
-          .catch((err) => console.error('Error enviando mail de fondo:', err));
+        // this.mailService
+        //   .sendWelcomeEmail(user.email, user.name)
+        //   .catch((err) => console.error('Error enviando mail de fondo:', err));
       }
       return {
         access_token,
