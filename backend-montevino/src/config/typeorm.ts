@@ -8,7 +8,7 @@ export default registerAs('typeorm', () => {
       type: 'postgres',
       url: process.env.DATABASE_URL,
       ssl: { rejectUnauthorized: false }, // 👈 habilita SSL
-      dropSchema: false,
+      dropSchema: true,
       synchronize: true,
       entities: ['dist/**/*.entity{.ts,.js}'],
       migrations: ['dist/migrations/*{.ts,.js}'],
