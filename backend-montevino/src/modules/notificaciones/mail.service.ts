@@ -1,9 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { Resend } from 'resend';
+import * as nodemailer from 'nodemailer';
 
 @Injectable()
 export class MailService {
-  private resend = new Resend(process.env.RESEND_API_KEY);
+  private transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+    tls: {
+      rejectUnauthorized: false,
+    },
+  });
 
   async sendWelcomeEmail(to: string, name: string) {
     const html = `
@@ -14,8 +23,8 @@ export class MailService {
       <p>Muchas gracias por registrarte.</p>
     `;
 
-    await this.resend.emails.send({
-      from: process.env.EMAIL_FROM!,
+    await this.transporter.sendMail({
+      from: '"MonteVino Restaurant" <no-reply@montevino.com>',
       to,
       subject: '¡Bienvenido a MonteVino!',
       html,
@@ -89,8 +98,8 @@ export class MailService {
       </div>
     `;
 
-    await this.resend.emails.send({
-      from: process.env.EMAIL_FROM!,
+    await this.transporter.sendMail({
+      from: '"MonteVino Reservas" <no-reply@montevino.com>',
       to,
       subject: isPaid
         ? `Pago Confirmado #${resData.id.split('-')[0]}`
