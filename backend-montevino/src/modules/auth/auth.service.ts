@@ -43,6 +43,15 @@ export class AuthService {
         email: user.email,
       };
     } catch (error: any) {
+      console.error(
+        'Error completo Auth0:',
+        JSON.stringify(
+          error?.response?.data || error?.message || error,
+          null,
+          2,
+        ),
+      );
+
       if (error.statusCode === 409) {
         throw new ConflictException(
           'El correo ya está registrado en Montevino.',
@@ -71,13 +80,17 @@ export class AuthService {
         password: password,
         audience: process.env.AUTH0_AUDIENCE,
         scope: 'openid profile email',
-        client_id: process.env.AUTH0_CLIENT_ID,
+        client_id: process.env.AUTH0_M2M_CLIENT_ID,
         client_secret: process.env.AUTH0_M2M_CLIENT_SECRET,
         realm: 'Username-Password-Authentication',
       });
 
       return response.data;
     } catch (error: any) {
+      console.error(
+        'Error login Auth0:',
+        JSON.stringify(error.response?.data || error.message, null, 2),
+      );
       throw new UnauthorizedException(
         error.response?.data?.error_description || 'Credenciales inválidas',
       );
@@ -109,7 +122,7 @@ export class AuthService {
       const response = await axios.post(url, {
         grant_type: 'authorization_code',
         client_id: process.env.AUTH0_CLIENT_ID,
-        client_secret: process.env.AUTH0_M2M_CLIENT_SECRET,
+        client_secret: process.env.AUTH0_FRONTEND_CLIENT_SECRET,
         code: code,
         redirect_uri: process.env.AUTH0_CALLBACK_URL,
       });
@@ -137,7 +150,7 @@ export class AuthService {
         access_token,
         user,
       };
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error en el callback de Google:', error.response?.data);
       throw error;
     }
