@@ -9,12 +9,12 @@ export default registerAs('typeorm', () => {
       url: process.env.DATABASE_URL,
       ssl: { rejectUnauthorized: false }, // 👈 habilita SSL
       dropSchema: false,
-      synchronize: true,
+      synchronize: true, // ⚠️ solo en desarrollo, en prod mejor usar migraciones
       entities: ['dist/**/*.entity{.ts,.js}'],
       migrations: ['dist/migrations/*{.ts,.js}'],
       extra: {
         ssl: true,
-        family: 4,
+        family: 4, // 👈 fuerza IPv4
       },
     };
   }
@@ -43,7 +43,7 @@ export const connectionSource = new DataSource(
         migrations: ['dist/migrations/*{.ts,.js}'],
         extra: {
           ssl: true,
-          family: 4,
+          family: 4, // 👈 fuerza IPv4
         },
       }
     : {
