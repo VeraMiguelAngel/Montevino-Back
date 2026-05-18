@@ -5,10 +5,11 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { HostOrder } from './entities/host-order.entity';
+import { HostOrder, hostOrderStatus } from './entities/host-order.entity';
 import { Reservations } from '../reservations/entities/reservation.entity';
 import { Pedidos, pedidoStatus } from '../pedidos/entities/pedido.entity';
 import { reservationStatus } from '../reservations/reservation-status.enum';
+import { Platos } from '../platos/entities/platos.entity';
 
 @Injectable()
 export class HostService {
@@ -19,6 +20,8 @@ export class HostService {
     private reservationsRepo: Repository<Reservations>,
     @InjectRepository(Pedidos)
     private pedidosRepo: Repository<Pedidos>,
+    @InjectRepository(Platos)
+    private platosRepo: Repository<Platos>,
   ) {}
 
   // Ver reservas confirmadas del día actual
@@ -101,5 +104,79 @@ export class HostService {
     if (!pedido) throw new NotFoundException('Pedido no encontrado');
     pedido.status = pedidoStatus.ENTREGADO;
     return this.pedidosRepo.save(pedido);
+  }
+
+  async addPedido(hostOrderId: string, platoId: string, quantity: number) {
+    const order = await this.hostOrderRepo.findOne({
+      where: { id: hostOrderId },
+      relations: ['reservation'],
+    });
+    if (!order) throw new NotFoundException('Orden no encontrada');
+
+    const plato = await this.platosRepo.findOne({ where: { id: platoId } });
+    if (!plato) throw new NotFoundException('Plato no encontrado');
+
+    const pedido = this.pedidosRepo.create({
+      quantity,
+      price: plato.price,
+      menuItem: { id: platoId } as any,
+      reservation: { id: order.reservation.id } as any,
+      status: pedidoStatus.PENDIENTE,
+    });
+
+    return this.pedidosRepo.save(pedido);
+  }
+
+  async closeOrder(hostOrderId: string) {
+    const order = await this.hostOrderRepo.findOne({
+      where: { id: hostOrderId },
+      relations: [
+        'reservation',
+        'reservation.pedidos',
+        'reservation.pedidos.menuItem',
+      ],
+    });
+    if (!order) throw new NotFoundException('Orden no encontrada');
+
+    // Calcular total de pedidos
+    const totalPedidos = order.reservation.pedidos.reduce(
+      (acc, p) => acc + Number(p.price) * p.quantity,
+      0,
+    );
+
+    order.status = hostOrderStatus.FINALIZADA;
+    await this.hostOrderRepo.save(order);
+
+    const reservation = await this.reservationsRepo.findOne({
+      where: { id: order.reservation.id },
+    });
+    if (reservation) {
+      reservation.status = reservationStatus.FINALIZADA;
+      await this.reservationsRepo.save(reservation);
+    }
+
+    return {
+      message: 'Orden cerrada correctamente',
+      totalPedidos,
+      depositAmount: order.reservation.depositAmount,
+      totalRestante: Math.max(
+        0,
+        totalPedidos - Number(order.reservation.depositAmount),
+      ),
+    };
+  }
+
+  async getActiveOrders() {
+    return this.hostOrderRepo.find({
+      where: { status: hostOrderStatus.EN_CURSO },
+      relations: [
+        'reservation',
+        'reservation.user',
+        'reservation.table',
+        'reservation.pedidos',
+        'reservation.pedidos.menuItem',
+      ],
+      order: { checkInTime: 'ASC' },
+    });
   }
 }

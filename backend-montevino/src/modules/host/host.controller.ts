@@ -7,6 +7,7 @@ import {
   Req,
   UseGuards,
   Query,
+  Body,
 } from '@nestjs/common';
 import { HostService } from './host.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -44,5 +45,23 @@ export class HostController {
   @Patch('pedidos/:id/deliver')
   deliverPedido(@Param('id') id: string) {
     return this.hostService.deliverPedido(id);
+  }
+
+  @Post('orders/:id/pedidos')
+  addPedido(
+    @Param('id') id: string,
+    @Body() body: { platoId: string; quantity: number },
+  ) {
+    return this.hostService.addPedido(id, body.platoId, body.quantity);
+  }
+
+  @Patch('orders/:id/close')
+  closeOrder(@Param('id') id: string) {
+    return this.hostService.closeOrder(id);
+  }
+
+  @Get('orders')
+  getActiveOrders() {
+    return this.hostService.getActiveOrders();
   }
 }
