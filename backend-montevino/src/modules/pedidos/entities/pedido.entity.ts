@@ -8,6 +8,11 @@ import {
 import { Reservations } from '../../reservations/entities/reservation.entity';
 import { Platos } from 'src/modules/platos/entities/platos.entity';
 
+export enum pedidoStatus {
+  PENDIENTE = 'PENDIENTE',
+  ENTREGADO = 'ENTREGADO',
+}
+
 @Entity({ name: 'PEDIDOS' })
 export class Pedidos {
   @PrimaryGeneratedColumn('uuid')
@@ -22,6 +27,13 @@ export class Pedidos {
     scale: 2,
   })
   price: number;
+
+  @Column({
+    type: 'enum',
+    enum: pedidoStatus,
+    default: pedidoStatus.PENDIENTE,
+  })
+  status: pedidoStatus;
 
   @ManyToOne(() => Platos)
   @JoinColumn({ name: 'platoId' })

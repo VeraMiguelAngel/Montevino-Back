@@ -12,6 +12,7 @@ import { AppController } from './app.controller';
 import { TablesModule } from './modules/tables/tables.module';
 import { PaymentsModule } from './modules/payments/payments.module';
 import { BebidasModule } from './modules/bebidas/bebidas.module';
+import { HostModule } from './modules/host/host.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { BebidasModule } from './modules/bebidas/bebidas.module';
     FileUploadModule,
     TablesModule,
     PaymentsModule,
+    HostModule,
   ],
   controllers: [AppController],
 })

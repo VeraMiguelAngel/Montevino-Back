@@ -18,6 +18,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth-guard';
 import { usersRole } from './users-role.enum';
 import { Roles } from 'src/decorators/roles.decorator';
 import { FileInterceptor } from '@nestjs/platform-express';
+import type { Multer } from 'multer';
 
 @Controller('users')
 export class UsersController {
@@ -74,5 +75,13 @@ export class UsersController {
   @Patch(':id/makeadmin')
   makeAdmin(@Param('id') id: string, @Req() req) {
     return this.usersService.makeAdmin(id, req.user);
+  }
+
+  @ApiBearerAuth()
+  @Roles(usersRole.ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Patch(':id/makehost')
+  makeHost(@Param('id') id: string, @Req() req) {
+    return this.usersService.makeHost(id, req.user);
   }
 }
