@@ -138,31 +138,41 @@ export class HostService {
     });
     if (!order) throw new NotFoundException('Orden no encontrada');
 
-    // Calcular total de pedidos
-    const totalPedidos = order.reservation.pedidos.reduce(
-      (acc, p) => acc + Number(p.price) * p.quantity,
-      0,
-    );
+    const reservation = order.reservation;
+
+    // Total de platos pre-pedidos (price ya tiene el valor total quantity * unitPrice)
+    const totalPrePedidos = reservation.pedidos
+      .filter((p) => Number(p.price) > 0) // excluye extras con price 0 viejos
+      .reduce((acc, p) => acc + Number(p.price) * p.quantity, 0);
+
+    // Solo el 85% restante de los pre-pedidos
+    const restantePrePedidos = totalPrePedidos * 0.85;
+
+    // Total de extras agregados por el Host (price guardado al 100%)
+    // Los extras tienen reservationId pero fueron agregados después del check-in
+    // Los identificamos porque tienen price > 0 y fueron creados por el Host
+    const totalExtras =
+      reservation.pedidos
+        .filter((p) => Number(p.price) > 0)
+        .reduce((acc, p) => acc + Number(p.price) * p.quantity, 0) -
+      totalPrePedidos;
+
+    const totalACobrar = restantePrePedidos + Math.max(0, totalExtras);
 
     order.status = hostOrderStatus.FINALIZADA;
     await this.hostOrderRepo.save(order);
 
-    const reservation = await this.reservationsRepo.findOne({
-      where: { id: order.reservation.id },
+    await this.reservationsRepo.save({
+      ...reservation,
+      status: reservationStatus.FINALIZADA,
     });
-    if (reservation) {
-      reservation.status = reservationStatus.FINALIZADA;
-      await this.reservationsRepo.save(reservation);
-    }
 
     return {
       message: 'Orden cerrada correctamente',
-      totalPedidos,
-      depositAmount: order.reservation.depositAmount,
-      totalRestante: Math.max(
-        0,
-        totalPedidos - Number(order.reservation.depositAmount),
-      ),
+      depositAmount: reservation.depositAmount,
+      restantePrePedidos,
+      totalExtras: Math.max(0, totalExtras),
+      totalACobrar,
     };
   }
 

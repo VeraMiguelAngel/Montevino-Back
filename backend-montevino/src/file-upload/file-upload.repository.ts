@@ -1,41 +1,44 @@
-import { Injectable } from "@nestjs/common";
-const toStream = require('buffer-to-stream'); 
-import { v2 as cloudinary, UploadApiResponse } from "cloudinary";
+import { Injectable } from '@nestjs/common';
+const toStream = require('buffer-to-stream');
+import { v2 as cloudinary, UploadApiResponse } from 'cloudinary';
 
 @Injectable()
 export class FileUploadRepository {
-    async uploadImage(file: Express.Multer.File): Promise<UploadApiResponse> {
-        return new Promise((resolve, reject) => {
-            const upload = cloudinary.uploader.upload_stream(
-                { resource_type: "image" },
-                (error, result) => {
-                    if (error) {
-                        reject(error);
-                    } else {
-                        resolve(result!);
-                    }
-                },
-            );
+  async uploadImage(file: Express.Multer.File): Promise<UploadApiResponse> {
+    return new Promise((resolve, reject) => {
+      const upload = cloudinary.uploader.upload_stream(
+        { resource_type: 'image' },
+        (error, result) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(result!);
+          }
+        },
+      );
 
-            toStream(file.buffer).pipe(upload);
-        });
-    }
+      toStream(file.buffer).pipe(upload);
+    });
+  }
 
-    async uploadImageFromUrl(url: string, playerName: string): Promise<UploadApiResponse> {
-  return new Promise((resolve, reject) => {
-    cloudinary.uploader.upload(
-      url,
-      { 
-        resource_type: "image", 
-        folder: "menu_platos",
-        public_id: playerName.toLowerCase().replace(/\s+/g, '_'),
-        overwrite: true 
-      },
-      (error, result) => {
-        if (error) reject(error);
-        else resolve(result!);
-      }
-    );
-  });
-}
+  async uploadImageFromUrl(
+    url: string,
+    playerName: string,
+  ): Promise<UploadApiResponse> {
+    return new Promise((resolve, reject) => {
+      cloudinary.uploader.upload(
+        url,
+        {
+          resource_type: 'image',
+          folder: 'menu_platos',
+          public_id: playerName.toLowerCase().replace(/\s+/g, '_'),
+          overwrite: true,
+        },
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result!);
+        },
+      );
+    });
+  }
 }

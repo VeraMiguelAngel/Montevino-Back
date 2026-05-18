@@ -12,6 +12,10 @@ export default registerAs('typeorm', () => {
       synchronize: true,
       entities: ['dist/**/*.entity{.ts,.js}'],
       migrations: ['dist/migrations/*{.ts,.js}'],
+      extra: {
+        ssl: true,
+        family: 4,
+      },
     };
   }
   // Local
@@ -37,6 +41,10 @@ export const connectionSource = new DataSource(
         ssl: { rejectUnauthorized: false }, // 👈 también aquí
         entities: ['dist/**/*.entity{.ts,.js}'],
         migrations: ['dist/migrations/*{.ts,.js}'],
+        extra: {
+          ssl: true,
+          family: 4,
+        },
       }
     : {
         type: 'postgres',
