@@ -13,6 +13,7 @@ import { TablesModule } from './modules/tables/tables.module';
 import { PaymentsModule } from './modules/payments/payments.module';
 import { BebidasModule } from './modules/bebidas/bebidas.module';
 import { HostModule } from './modules/host/host.module';
+import { MozoModule } from './modules/mozo/mozo.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { HostModule } from './modules/host/host.module';
     TablesModule,
     PaymentsModule,
     HostModule,
+    MozoModule,
   ],
   controllers: [AppController],
 })

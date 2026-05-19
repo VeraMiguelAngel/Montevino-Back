@@ -84,4 +84,12 @@ export class UsersController {
   makeHost(@Param('id') id: string, @Req() req) {
     return this.usersService.makeHost(id, req.user);
   }
+
+  @ApiBearerAuth()
+  @Roles(usersRole.ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Patch(':id/makewaiter')
+  makeWaiter(@Param('id') id: string, @Req() req) {
+    return this.usersService.makeWaiter(id, req.user);
+  }
 }
