@@ -21,7 +21,8 @@ export class ReservationsController {
   constructor(private readonly reservationsService: ReservationsService) {}
 
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
+  @Roles(usersRole.USER)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Post()
   create(@Body() createReservationDto: CreateReservationDto, @Req() req) {
     return this.reservationsService.create(createReservationDto, req.user);

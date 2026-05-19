@@ -297,13 +297,26 @@ export class ReservationsService {
       throw new BadRequestException('La reserva ya está cancelada');
     }
 
+    // Restricción de 24hs
+    const reservationDateTime = new Date(
+      `${reservation.reservationDate}T${reservation.startTime}`,
+    );
+    const now = new Date();
+    const diffHours =
+      (reservationDateTime.getTime() - now.getTime()) / (1000 * 60 * 60);
+
+    if (diffHours < 24) {
+      throw new BadRequestException(
+        'No podés cancelar una reserva con menos de 24hs de anticipación',
+      );
+    }
+
     for (const pedido of reservation.pedidos) {
       pedido.menuItem.stock += pedido.quantity;
       await this.platosRepository.save(pedido.menuItem);
     }
 
     reservation.status = reservationStatus.CANCELADA;
-
     await this.reservationsRepository.save(reservation);
 
     return {

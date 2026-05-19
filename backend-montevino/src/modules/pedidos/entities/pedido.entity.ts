@@ -35,6 +35,9 @@ export class Pedidos {
   })
   status: pedidoStatus;
 
+  @Column({ default: false })
+  isExtra: boolean;
+
   @ManyToOne(() => Platos)
   @JoinColumn({ name: 'platoId' })
   menuItem: Platos;

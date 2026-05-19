@@ -6,6 +6,7 @@ import { Reservations } from './entities/reservation.entity';
 import { TablesModule } from '../tables/tables.module';
 import { Platos } from '../platos/entities/platos.entity';
 import { Pedidos } from '../pedidos/entities/pedido.entity';
+import { ReservationsCron } from './reservations.cron';
 
 @Module({
   imports: [
@@ -13,7 +14,7 @@ import { Pedidos } from '../pedidos/entities/pedido.entity';
     TablesModule,
   ],
   controllers: [ReservationsController],
-  providers: [ReservationsService],
+  providers: [ReservationsService, ReservationsCron],
   exports: [ReservationsService],
 })
 export class ReservationsModule {}

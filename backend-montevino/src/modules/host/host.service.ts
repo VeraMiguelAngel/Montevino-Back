@@ -122,6 +122,7 @@ export class HostService {
       menuItem: { id: platoId } as any,
       reservation: { id: order.reservation.id } as any,
       status: pedidoStatus.PENDIENTE,
+      isExtra: true,
     });
 
     return this.pedidosRepo.save(pedido);
@@ -140,24 +141,21 @@ export class HostService {
 
     const reservation = order.reservation;
 
-    // Total de platos pre-pedidos (price ya tiene el valor total quantity * unitPrice)
-    const totalPrePedidos = reservation.pedidos
-      .filter((p) => Number(p.price) > 0) // excluye extras con price 0 viejos
-      .reduce((acc, p) => acc + Number(p.price) * p.quantity, 0);
+    const prePedidos = reservation.pedidos.filter((p) => !p.isExtra);
+    const extras = reservation.pedidos.filter((p) => p.isExtra);
 
-    // Solo el 85% restante de los pre-pedidos
+    const totalPrePedidos = prePedidos.reduce(
+      (acc, p) => acc + Number(p.price) * p.quantity,
+      0,
+    );
+
+    const totalExtras = extras.reduce(
+      (acc, p) => acc + Number(p.price) * p.quantity,
+      0,
+    );
+
     const restantePrePedidos = totalPrePedidos * 0.85;
-
-    // Total de extras agregados por el Host (price guardado al 100%)
-    // Los extras tienen reservationId pero fueron agregados después del check-in
-    // Los identificamos porque tienen price > 0 y fueron creados por el Host
-    const totalExtras =
-      reservation.pedidos
-        .filter((p) => Number(p.price) > 0)
-        .reduce((acc, p) => acc + Number(p.price) * p.quantity, 0) -
-      totalPrePedidos;
-
-    const totalACobrar = restantePrePedidos + Math.max(0, totalExtras);
+    const totalACobrar = restantePrePedidos + totalExtras;
 
     order.status = hostOrderStatus.FINALIZADA;
     await this.hostOrderRepo.save(order);
@@ -170,9 +168,9 @@ export class HostService {
     return {
       message: 'Orden cerrada correctamente',
       depositAmount: reservation.depositAmount,
-      restantePrePedidos,
-      totalExtras: Math.max(0, totalExtras),
-      totalACobrar,
+      restantePrePedidos: Number(restantePrePedidos.toFixed(2)),
+      totalExtras: Number(totalExtras.toFixed(2)),
+      totalACobrar: Number(totalACobrar.toFixed(2)),
     };
   }
 
@@ -188,5 +186,45 @@ export class HostService {
       ],
       order: { checkInTime: 'ASC' },
     });
+  }
+
+  async getClosedOrders() {
+    return this.hostOrderRepo.find({
+      where: { status: hostOrderStatus.FINALIZADA },
+      relations: [
+        'reservation',
+        'reservation.user',
+        'reservation.table',
+        'reservation.pedidos',
+        'reservation.pedidos.menuItem',
+      ],
+      order: { checkInTime: 'DESC' },
+    });
+  }
+
+  async getPendingReservations() {
+    return this.reservationsRepo.find({
+      where: { status: reservationStatus.PAGO_PENDIENTE },
+      relations: ['user', 'table', 'pedidos', 'pedidos.menuItem'],
+      order: { reservationDate: 'ASC' },
+    });
+  }
+
+  async cancelReservation(reservationId: string) {
+    const reservation = await this.reservationsRepo.findOne({
+      where: { id: reservationId },
+      relations: ['pedidos', 'pedidos.menuItem'],
+    });
+
+    if (!reservation) throw new NotFoundException('Reserva no encontrada');
+
+    if (reservation.status === reservationStatus.CANCELADA) {
+      throw new BadRequestException('La reserva ya está cancelada');
+    }
+
+    reservation.status = reservationStatus.CANCELADA;
+    await this.reservationsRepo.save(reservation);
+
+    return { message: 'Reserva cancelada correctamente' };
   }
 }

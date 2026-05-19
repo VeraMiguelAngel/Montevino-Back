@@ -32,6 +32,21 @@ export class HostController {
     return this.hostService.getReservationsByDate(targetDate);
   }
 
+  @Get('orders')
+  getActiveOrders() {
+    return this.hostService.getActiveOrders();
+  }
+
+  @Get('orders/closed')
+  getClosedOrders() {
+    return this.hostService.getClosedOrders();
+  }
+
+  @Get('reservations/pending')
+  getPendingReservations() {
+    return this.hostService.getPendingReservations();
+  }
+
   @Post('reservations/:id/checkin')
   checkIn(@Param('id') id: string, @Req() req: any) {
     return this.hostService.checkIn(id, req.user.id);
@@ -60,8 +75,8 @@ export class HostController {
     return this.hostService.closeOrder(id);
   }
 
-  @Get('orders')
-  getActiveOrders() {
-    return this.hostService.getActiveOrders();
+  @Patch('reservations/:id/cancel')
+  cancelReservation(@Param('id') id: string) {
+    return this.hostService.cancelReservation(id);
   }
 }
