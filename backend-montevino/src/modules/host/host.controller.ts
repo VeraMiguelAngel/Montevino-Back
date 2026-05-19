@@ -79,4 +79,9 @@ export class HostController {
   cancelReservation(@Param('id') id: string) {
     return this.hostService.cancelReservation(id);
   }
+
+  @Patch('orders/:id/activate')
+  activarPedidos(@Param('id') id: string) {
+    return this.hostService.activarPedidos(id);
+  }
 }

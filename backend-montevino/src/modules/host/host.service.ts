@@ -227,4 +227,23 @@ export class HostService {
 
     return { message: 'Reserva cancelada correctamente' };
   }
+
+  async activarPedidos(hostOrderId: string) {
+    const order = await this.hostOrderRepo.findOne({
+      where: { id: hostOrderId },
+      relations: ['reservation', 'reservation.pedidos'],
+    });
+    if (!order) throw new NotFoundException('Orden no encontrada');
+
+    const pedidos = order.reservation.pedidos.filter(
+      (p) => p.status === pedidoStatus.PENDIENTE && !p.isExtra,
+    );
+
+    for (const pedido of pedidos) {
+      pedido.status = pedidoStatus.EN_PREPARACION;
+      await this.pedidosRepo.save(pedido);
+    }
+
+    return { message: `${pedidos.length} pedidos enviados a cocina` };
+  }
 }

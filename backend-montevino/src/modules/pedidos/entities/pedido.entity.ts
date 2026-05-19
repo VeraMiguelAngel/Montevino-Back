@@ -10,6 +10,7 @@ import { Platos } from 'src/modules/platos/entities/platos.entity';
 
 export enum pedidoStatus {
   PENDIENTE = 'PENDIENTE',
+  EN_PREPARACION = 'EN_PREPARACION',
   ENTREGADO = 'ENTREGADO',
 }
 
