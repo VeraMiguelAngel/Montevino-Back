@@ -6,7 +6,7 @@ import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const FRONTURL = 'https://montevino-frontend.vercel.app';
+  const FRONTURL = process.env.FRONTEND_URL || 'http://localhost:3001';gi
 
   app.useGlobalPipes(
     new ValidationPipe({
