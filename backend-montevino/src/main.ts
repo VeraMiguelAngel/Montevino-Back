@@ -6,7 +6,7 @@ import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const FRONTURL = process.env.FRONTEND_URL || 'http://localhost:3001';gi
+  const FRONTURL = process.env.FRONTEND_URL || 'http://localhost:3001';
 
   app.useGlobalPipes(
     new ValidationPipe({
