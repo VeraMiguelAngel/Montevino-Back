@@ -53,7 +53,7 @@ export class TablesService {
 
     const tables: Partial<Table>[] = [];
 
-    for (let i = 1; i <= 50; i++) {
+    for (let i = 1; i <= 20; i++) {
       tables.push(
         this.tablesRepository.create({
           tableNumber: i,
@@ -92,5 +92,37 @@ export class TablesService {
 
   findAll() {
     return this.tablesRepository.find();
+  }
+
+  async getTablesStatus() {
+    const tables = await this.tablesRepository.find({
+      relations: ['reservations', 'reservations.hostOrders'],
+    });
+
+    const today = new Date().toISOString().split('T')[0];
+
+    return tables.map((table) => {
+      // Verificar si tiene una orden en curso (OCUPADA)
+      const tieneOrdenEnCurso = table.reservations.some(
+        (r) => r.status === reservationStatus.EN_CURSO,
+      );
+
+      // Verificar si tiene una reserva confirmada para hoy (RESERVADA)
+      const tieneReservaHoy = table.reservations.some(
+        (r) =>
+          r.status === reservationStatus.CONFIRMADA &&
+          new Date(r.reservationDate).toISOString().split('T')[0] === today,
+      );
+
+      let status = TableStatus.DISPONIBLE;
+      if (tieneOrdenEnCurso) status = TableStatus.OCUPADA;
+      else if (tieneReservaHoy) status = TableStatus.RESERVADA;
+
+      return {
+        id: table.id,
+        tableNumber: table.tableNumber,
+        status,
+      };
+    });
   }
 }

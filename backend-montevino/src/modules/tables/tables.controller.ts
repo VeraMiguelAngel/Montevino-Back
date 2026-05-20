@@ -30,6 +30,14 @@ export class TablesController {
   @ApiBearerAuth()
   @Roles(usersRole.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
+  @Get('status')
+  getTablesStatus() {
+    return this.tablesService.getTablesStatus();
+  }
+
+  @ApiBearerAuth()
+  @Roles(usersRole.ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('availability')
   getTablesAvailability(
     @Query('date') date: string,

@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { HostOrder, hostOrderStatus } from '../host/entities/host-order.entity';
@@ -51,6 +55,13 @@ export class MozoService {
   async deliverPedido(pedidoId: string) {
     const pedido = await this.pedidosRepo.findOne({ where: { id: pedidoId } });
     if (!pedido) throw new NotFoundException('Pedido no encontrado');
+
+    if (pedido.status !== pedidoStatus.EN_PREPARACION) {
+      throw new BadRequestException(
+        'El pedido debe estar en preparación para poder entregarlo',
+      );
+    }
+
     pedido.status = pedidoStatus.ENTREGADO;
     return this.pedidosRepo.save(pedido);
   }
@@ -71,7 +82,7 @@ export class MozoService {
       price: plato.price,
       menuItem: { id: platoId } as any,
       reservation: { id: order.reservation.id } as any,
-      status: pedidoStatus.PENDIENTE,
+      status: pedidoStatus.EN_PREPARACION,
       isExtra: true,
     });
 
@@ -91,6 +102,18 @@ export class MozoService {
     if (!order) throw new NotFoundException('Orden no encontrada');
 
     const reservation = order.reservation;
+
+    // Verificar que todos los pedidos estén entregados
+    const pendientes = reservation.pedidos.filter(
+      (p) => p.status !== pedidoStatus.ENTREGADO,
+    );
+
+    if (pendientes.length > 0) {
+      throw new BadRequestException(
+        `Hay ${pendientes.length} pedido/s sin entregar. Debés entregar todos antes de cerrar la mesa.`,
+      );
+    }
+
     const prePedidos = reservation.pedidos.filter((p) => !p.isExtra);
     const extras = reservation.pedidos.filter((p) => p.isExtra);
 
