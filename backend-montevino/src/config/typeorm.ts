@@ -7,6 +7,7 @@ export default registerAs('typeorm', () => {
     return {
       type: 'postgres',
       url: process.env.DATABASE_URL,
+      ssl: { rejectUnauthorized: false }, // 👈 habilita SSL
       dropSchema: false,
       synchronize: true, // ⚠️ solo en desarrollo, en prod mejor usar migraciones
       entities: ['dist/**/*.entity{.ts,.js}'],
@@ -33,6 +34,7 @@ export const connectionSource = new DataSource(
     ? {
         type: 'postgres',
         url: process.env.DATABASE_URL,
+        ssl: { rejectUnauthorized: false }, // 👈 también aquí
         entities: ['dist/**/*.entity{.ts,.js}'],
         migrations: ['dist/migrations/*{.ts,.js}'],
       }
