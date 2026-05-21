@@ -96,18 +96,18 @@ export class TablesService {
 
   async getTablesStatus() {
     const tables = await this.tablesRepository.find({
-      relations: ['reservations', 'reservations.hostOrders'],
+      relations: ['reservations'],
     });
 
     const today = new Date().toISOString().split('T')[0];
 
     return tables.map((table) => {
-      // Verificar si tiene una orden en curso (OCUPADA)
+      // OCUPADA: tiene una reserva EN_CURSO sin importar la fecha
       const tieneOrdenEnCurso = table.reservations.some(
         (r) => r.status === reservationStatus.EN_CURSO,
       );
 
-      // Verificar si tiene una reserva confirmada para hoy (RESERVADA)
+      // RESERVADA: tiene una reserva CONFIRMADA para hoy
       const tieneReservaHoy = table.reservations.some(
         (r) =>
           r.status === reservationStatus.CONFIRMADA &&

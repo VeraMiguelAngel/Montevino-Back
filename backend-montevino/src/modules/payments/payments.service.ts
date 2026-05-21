@@ -32,7 +32,7 @@ export class PaymentsService {
 
     const preference = new Preference(this.client);
 
-    const FRONTEND_URL =process.env.MP_FRONTEND_URL || process.env.FRONTEND_URL;
+    const FRONTEND_URL = process.env.FRONTEND_URL;
 
     const response = await preference.create({
       body: {
@@ -49,7 +49,7 @@ export class PaymentsService {
         },
         external_reference: reservation.id,
         notification_url:
-          'https://montevino-back-deploy.onrender.com/payments/webhook',
+          'https://montevino-backend-miguel.onrender.com/payments/webhook',
         back_urls: {
           success: `${FRONTEND_URL}/pagoExitoso`,
           failure: `${FRONTEND_URL}/pagoFallido`,

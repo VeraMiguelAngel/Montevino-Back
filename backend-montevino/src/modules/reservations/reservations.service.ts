@@ -329,4 +329,24 @@ export class ReservationsService {
   async save(reservation: any) {
     return await this.reservationsRepository.save(reservation);
   }
+
+  async getPlatosStats() {
+    const pedidos = await this.pedidosRepository.find({
+      relations: ['menuItem'],
+    });
+
+    const ranking: { [nombre: string]: number } = {};
+
+    pedidos.forEach((p) => {
+      const nombre = p.menuItem?.name;
+      if (nombre) {
+        ranking[nombre] = (ranking[nombre] || 0) + p.quantity;
+      }
+    });
+
+    return Object.entries(ranking)
+      .map(([name, total]) => ({ name, total }))
+      .sort((a, b) => b.total - a.total)
+      .slice(0, 10);
+  }
 }

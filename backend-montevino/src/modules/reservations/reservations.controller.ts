@@ -44,6 +44,14 @@ export class ReservationsController {
   }
 
   @ApiBearerAuth()
+  @Roles(usersRole.ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Get('stats/platos')
+  getPlatosStats() {
+    return this.reservationsService.getPlatosStats();
+  }
+
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Patch(':id/cancel')
   cancelReservation(@Param('id') id: string, @Req() req) {

@@ -23,20 +23,18 @@ export class RolesGuard implements CanActivate {
 
     const userRole = request.user.role;
 
-    const reqRole = this.reflector.getAllAndOverride<usersRole>('role', [
-      context.getHandler(),
-      context.getClass(),
-    ]);
+    const reqRoles = this.reflector.getAllAndOverride<usersRole | usersRole[]>(
+      'role',
+      [context.getHandler(), context.getClass()],
+    );
 
-    if (!reqRole) {
+    if (!reqRoles) {
       return true;
     }
 
-    if (!reqRole) {
-      return true;
-    }
+    const rolesArray = Array.isArray(reqRoles) ? reqRoles : [reqRoles];
 
-    if (userRole !== reqRole) {
+    if (!rolesArray.includes(userRole)) {
       throw new ForbiddenException(
         'No estás autorizado para acceder a este recurso',
       );

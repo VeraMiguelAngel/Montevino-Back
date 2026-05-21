@@ -28,7 +28,7 @@ export class TablesController {
   }
 
   @ApiBearerAuth()
-  @Roles(usersRole.ADMIN)
+  @Roles(usersRole.ADMIN, usersRole.HOST)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('status')
   getTablesStatus() {
