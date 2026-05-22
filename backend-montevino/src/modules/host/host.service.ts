@@ -37,13 +37,13 @@ export class HostService {
     });
   }
 
-  // Ver reservas confirmadas de fechas siguientes
+  // Ver reservas confirmadas de fechas siguientes y pasadas
   async getReservationsByDate(date: string) {
     return this.reservationsRepo.find({
-      where: {
-        reservationDate: date,
-        status: reservationStatus.CONFIRMADA,
-      },
+      where: [
+        { reservationDate: date, status: reservationStatus.CONFIRMADA },
+        { reservationDate: date, status: reservationStatus.EN_CURSO },
+      ],
       relations: ['user', 'table', 'pedidos', 'pedidos.menuItem'],
       order: { startTime: 'ASC' },
     });
