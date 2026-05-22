@@ -39,7 +39,7 @@ export class HostService {
 
   // Ver reservas confirmadas de fechas siguientes y pasadas
   async getReservationsByDate(date: string) {
-    return this.reservationsRepo.find({
+    const reservations = await this.reservationsRepo.find({
       where: [
         { reservationDate: date, status: reservationStatus.CONFIRMADA },
         { reservationDate: date, status: reservationStatus.EN_CURSO },
@@ -47,6 +47,11 @@ export class HostService {
       relations: ['user', 'table', 'pedidos', 'pedidos.menuItem'],
       order: { startTime: 'ASC' },
     });
+    console.log(
+      'Primera reserva table:',
+      JSON.stringify(reservations[0]?.table),
+    );
+    return reservations;
   }
 
   // Check-in: marcar llegada del cliente y generar HostOrder
