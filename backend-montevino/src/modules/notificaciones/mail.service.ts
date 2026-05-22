@@ -8,7 +8,7 @@ export class MailService {
   async sendWelcomeEmail(to: string, name: string) {
     await this.resend.emails.send({
       from: 'MonteVino <onboarding@resend.dev>',
-      to: process.env.MAIL_TEST || to,
+      to,
       subject: '¡Bienvenido a MonteVino!',
       html: `
         <h1>¡Bienvenido a MonteVino, ${name}!</h1>
@@ -42,7 +42,7 @@ export class MailService {
 
     await this.resend.emails.send({
       from: 'MonteVino <onboarding@resend.dev>',
-      to: process.env.MAIL_TEST || to,
+      to,
       subject: isPaid
         ? `Pago Confirmado #${resData.id.split('-')[0]}`
         : `Reserva Recibida #${resData.id.split('-')[0]}`,
