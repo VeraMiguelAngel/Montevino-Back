@@ -138,4 +138,13 @@ export class UsersService {
     user.role = usersRole.MOZO;
     return await this.usersRepository.save(user);
   }
+
+  async makeUser(id: string, requester: Users) {
+    if (requester?.id === id) {
+      throw new ForbiddenException('No puedes cambiar tu propio rol');
+    }
+    const user = await this.findOne(id);
+    user.role = usersRole.USER;
+    return await this.usersRepository.save(user);
+  }
 }

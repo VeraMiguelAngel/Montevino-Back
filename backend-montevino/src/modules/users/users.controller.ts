@@ -35,6 +35,14 @@ export class UsersController {
   @ApiBearerAuth()
   @Roles(usersRole.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
+  @Patch(':id/makeuser')
+  makeUser(@Param('id') id: string, @Req() req) {
+    return this.usersService.makeUser(id, req.user);
+  }
+
+  @ApiBearerAuth()
+  @Roles(usersRole.ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(id);
