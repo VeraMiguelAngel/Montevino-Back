@@ -47,6 +47,11 @@ export class HostController {
     return this.hostService.getPendingReservations();
   }
 
+  @Get('reservations/dates')
+  getReservationDates() {
+    return this.hostService.getReservationDates();
+  }
+
   @Post('reservations/:id/checkin')
   checkIn(@Param('id') id: string, @Req() req: any) {
     return this.hostService.checkIn(id, req.user.id);

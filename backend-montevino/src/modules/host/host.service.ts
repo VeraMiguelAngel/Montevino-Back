@@ -251,4 +251,18 @@ export class HostService {
 
     return { message: `${pedidos.length} pedidos enviados a cocina` };
   }
+
+  async getReservationDates() {
+    const reservations = await this.reservationsRepo.find({
+      where: [
+        { status: reservationStatus.CONFIRMADA },
+        { status: reservationStatus.EN_CURSO },
+      ],
+      select: ['reservationDate'],
+    });
+
+    // Devuelve fechas únicas
+    const fechas = [...new Set(reservations.map((r) => r.reservationDate))];
+    return fechas;
+  }
 }
